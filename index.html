@@ -3,13 +3,143 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FanTune — Spectral Fan Modulator</title>
-<meta name="description" content="FanTune recreates the authentic box-fan vocal effect: choppy, robotic, amplitude-modulated. Not modern Auto-Tune — the original childhood sound."/>
-<meta property="og:title" content="FanTune — Spectral Fan Modulator"/>
-<meta property="og:description" content="The authentic box-fan vocal effect. VST3 / AU / CLAP."/>
-<meta property="og:image" content="screenshots/plugin_hero.png"/>
+<title>FanTune — Spectral Fan Modulator VST3 Plugin | Box Fan Vocal Effect</title>
+<meta name="description" content="FanTune recreates the authentic box-fan vocal effect: choppy, robotic, amplitude-modulated VST3/AU/CLAP plugin. Not Auto-Tune — the original childhood sound of singing into a fan. Free trial."/>
+<meta name="keywords" content="fan vocal effect, box fan plugin, singing into a fan, VST3 pitch shifter, Auto-Tune alternative, fan modulation, audio plugin, vocal chopper, no DAW, free VST"/>
+<meta name="robots" content="index, follow"/>
+<meta name="author" content="FanTune"/>
 <meta name="theme-color" content="#00dcff"/>
+<link rel="canonical" href="https://myaiplug.github.io/fantune-skin/"/>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><circle cx='15' cy='15' r='15' fill='%2300dcff'/><path d='M15 15 Q10 6 18 3 Q24 2 22 10 Z' fill='%230a0a0f'/><path d='M15 15 Q24 12 27 20 Q28 26 20 24 Z' fill='%230a0a0f'/><path d='M15 15 Q14 24 6 25 Q0 24 4 17 Z' fill='%230a0a0f'/></svg>"/>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://myaiplug.github.io/fantune-skin/"/>
+<meta property="og:title" content="FanTune — Spectral Fan Modulator VST3/AU/CLAP Plugin"/>
+<meta property="og:description" content="The original box-fan vocal effect as a VST3 plugin. Blade-pass amplitude modulation that chops your voice — not smooth tremolo, real physics."/>
+<meta property="og:image" content="https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="FanTune"/>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="FanTune — Spectral Fan Modulator VST3 Plugin"/>
+<meta name="twitter:description" content="Sing into a fan, but make it a plugin. Blade-pass AM, dual geometry, vintage pitch mode. Free trial."/>
+<meta name="twitter:image" content="https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png"/>
+
+<!-- JSON-LD Structured Data: SoftwareApplication + Product -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "FanTune — Spectral Fan Modulator",
+  "applicationCategory": "Multimedia",
+  "applicationSubCategory": "Audio Plugin",
+  "operatingSystem": "Windows 10+, macOS 11+, Linux (glibc 2.31+)",
+  "browserRequirements": "Requires VST3, AU, or CLAP host",
+  "description": "FanTune recreates the authentic box-fan vocal effect — choppy, robotic, amplitude-modulated. Three rotating fan blades carve your vocal at 18-72 Hz. Not Auto-Tune, the original childhood sound.",
+  "url": "https://myaiplug.github.io/fantune-skin/",
+  "sameAs": [
+    "https://github.com/myaiplug/fantune-skin"
+  ],
+  "image": "https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png",
+  "softwareVersion": "1.0.0",
+  "datePublished": "2026-06-15",
+  "offers": {
+    "@type": "Offer",
+    "price": "49.00",
+    "priceCurrency": "USD",
+    "priceValidUntil": "2027-06-15",
+    "availability": "https://schema.org/InStock"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "FanTune"
+  }
+}
+</script>
+
+<!-- JSON-LD: FAQ structured data for answer engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is FanTune?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FanTune is a VST3/AU/CLAP audio plugin that recreates the sound of singing into a box fan. Three rotating fan blades create amplitude modulation that literally chops your voice at 18-72 Hz, producing the classic robotic, 'bits removed' vocal effect that went viral on YouTube in the mid-2000s."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is FanTune an Auto-Tune clone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. FanTune is the opposite of Auto-Tune. The primary effect is amplitude modulation from physical fan blades — the voice gets literally chopped into pieces. Pitch correction is a secondary layer that gates off during blade close. The 'pitchy' sound comes from the chop itself, not from grain shifting."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What DAWs does FanTune support?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Any DAW that supports VST3 (Ableton Live 11+, FL Studio, Cubase, Reaper, Studio One, Bitwig) or AU (Logic Pro, GarageBand). CLAP format is also supported for DAWs that support it. The standalone version works as a desktop audio application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does FanTune work on instruments besides voice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. FanTune works on guitars, synths, drums, and full mixes. Acoustic instruments with natural transient content respond especially well because the blade gate interacts with their attack and release envelope."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a free trial of FanTune?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. FanTune offers a free trial that includes the full plugin with all features. The interactive browser demo is also free to use at any time with no download required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use FanTune without a DAW?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. FanTune includes a standalone desktop application that works without a DAW. You can load audio files, process them with the fan engine, and export the result. The interactive web demo also works entirely in the browser."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- JSON-LD: BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "FanTune",
+      "item": "https://myaiplug.github.io/fantune-skin/"
+    }
+  ]
+}
+</script>
+
+<!-- GEO: Generative engine optimization hints -->
+<meta name="geo.region" content="US"/>
+<meta name="geo.placename" content="Global"/>
+<meta name="generator" content="FanTune v1.0.0"/>
+<link rel="alternate" hreflang="en" href="https://myaiplug.github.io/fantune-skin/"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}

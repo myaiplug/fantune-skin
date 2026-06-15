@@ -3,13 +3,131 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FanTune — NoDAW • Mechanical Resonance Pitch Shifter</title>
-<meta name="description" content="The world's first mechanical resonance pitch shifter. No DAW required. Sing into your browser, export WAV, done."/>
-<meta property="og:title" content="FanTune — NoDAW Mechanical Pitch Shifter"/>
-<meta property="og:description" content="Fan blades carve your voice. No DAW. No install. Free to try."/>
-<meta property="og:image" content="screenshots/plugin_hero.png"/>
+<title>FanTune NoDAW Studio — Browser-Based Fan Vocal Effect | Free Web App</title>
+<meta name="description" content="FanTune NoDAW Studio — the world's first mechanical resonance pitch shifter that works entirely in your browser. No DAW, no install, no account. Sing, process, export WAV free."/>
+<meta name="keywords" content="NoDAW, fan vocal effect online, browser audio plugin, web audio API effect, free vocal chopper, sing into a fan online, no DAW needed, mechanical pitch shifter"/>
+<meta name="robots" content="index, follow"/>
+<meta name="author" content="FanTune"/>
 <meta name="theme-color" content="#0a0a0a"/>
+<link rel="canonical" href="https://myaiplug.github.io/fantune-skin/index-nodaw.html"/>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><circle cx='15' cy='15' r='15' fill='%2300dcff'/><path d='M15 15 Q10 6 18 3 Q24 2 22 10 Z' fill='%230a0a0f'/><path d='M15 15 Q24 12 27 20 Q28 26 20 24 Z' fill='%230a0a0f'/><path d='M15 15 Q14 24 6 25 Q0 24 4 17 Z' fill='%230a0a0f'/></svg>"/>
+
+<!-- Open Graph -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://myaiplug.github.io/fantune-skin/index-nodaw.html"/>
+<meta property="og:title" content="FanTune NoDAW Studio — Web Audio Fan Effect, Free"/>
+<meta property="og:description" content="Three fan blades carve your voice in the browser. No DAW. No install. Free. Export WAV, use anywhere."/>
+<meta property="og:image" content="https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="FanTune NoDAW"/>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="FanTune NoDAW Studio — Browser Fan Vocal Effect"/>
+<meta name="twitter:description" content="Sing into a browser, sound like a fan. Web Audio API. Free. No DAW."/>
+<meta name="twitter:image" content="https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png"/>
+
+<!-- JSON-LD: SoftwareApplication + Product -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FanTune NoDAW Studio",
+  "applicationCategory": "Multimedia",
+  "applicationSubCategory": "Web Audio Effect",
+  "browserRequirements": "Modern browser with Web Audio API support",
+  "operatingSystem": "Any (browser-based)",
+  "description": "FanTune NoDAW Studio is a browser-based web application that recreates the authentic box-fan vocal effect using Web Audio API. No DAW required — just open the page, load audio, hear the chop.",
+  "url": "https://myaiplug.github.io/fantune-skin/index-nodaw.html",
+  "image": "https://myaiplug.github.io/fantune-skin/screenshots/plugin_hero.png",
+  "softwareVersion": "1.0.0",
+  "datePublished": "2026-06-15",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Free",
+      "price": "0",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "name": "Pro",
+      "price": "49.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "name": "Studio",
+      "price": "99.00",
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    }
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "FanTune"
+  }
+}
+</script>
+
+<!-- JSON-LD: FAQ for answer engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is FanTune NoDAW Studio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FanTune NoDAW Studio is a browser-based web app that recreates the box-fan vocal effect using Web Audio API. Open the page, load an audio file, and hear your voice chopped by three rotating fan blades — no DAW, no install, no account needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does NoDAW mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NoDAW means you can use FanTune without opening a DAW at all. The browser version loads in any modern browser with Web Audio API support — no install, no account, no plugins. Just open the page, load audio, and hear the effect."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is FanTune NoDAW really free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The web app is completely free with no limitations. You get the full fan DSP engine, audio file loading, real-time processing, and WAV export. The paid Pro and Studio tiers add VST3/AU/CLAP plugin versions, MIDI learn, A/B comparison, and commercial licensing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I export audio from the NoDAW web app?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The NoDAW Studio web app allows you to export processed audio as WAV files at 44.1k or 48k sample rate, 16-bit or 24-bit depth."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What browsers does NoDAW Studio work in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "NoDAW Studio works in any modern browser that supports Web Audio API: Chrome, Firefox, Safari, Edge, and Opera. No plugins or extensions required."
+      }
+    }
+  ]
+}
+</script>
+
+<!-- GEO hints -->
+<meta name="geo.region" content="US"/>
+<meta name="generator" content="FanTune v1.0.0"/>
+<link rel="alternate" hreflang="en" href="https://myaiplug.github.io/fantune-skin/index-nodaw.html"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
