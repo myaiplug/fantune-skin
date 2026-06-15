@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FanTune — NoDAW • Mechanical Resonance Pitch Shifter</title>
+<meta name="description" content="The world's first mechanical resonance pitch shifter. No DAW required. Sing into your browser, export WAV, done."/>
+<meta property="og:title" content="FanTune — NoDAW Mechanical Pitch Shifter"/>
+<meta property="og:description" content="Fan blades carve your voice. No DAW. No install. Free to try."/>
+<meta property="og:image" content="screenshots/plugin_hero.png"/>
+<meta name="theme-color" content="#0a0a0a"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><circle cx='15' cy='15' r='15' fill='%2300dcff'/><path d='M15 15 Q10 6 18 3 Q24 2 22 10 Z' fill='%230a0a0f'/><path d='M15 15 Q24 12 27 20 Q28 26 20 24 Z' fill='%230a0a0f'/><path d='M15 15 Q14 24 6 25 Q0 24 4 17 Z' fill='%230a0a0f'/></svg>"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#0a0a0a;color:#d0d8e8;overflow-x:hidden;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:120px 0}
+.section-dark{background:#080808}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:600;letter-spacing:0.03em;text-decoration:none;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit}
+.btn-primary{background:#00dcff;color:#0a0a0a;box-shadow:0 4px 30px rgba(0,220,255,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(0,220,255,0.35)}
+.btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.15)}
+.btn-outline:hover{background:rgba(255,255,255,0.05);border-color:#00dcff;color:#00dcff}
+.btn-gold{background:linear-gradient(135deg,#f0c040,#d4a020);color:#0a0a0a;box-shadow:0 4px 30px rgba(240,192,64,0.2)}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(240,192,64,0.35)}
+.btn-lg{padding:18px 44px;font-size:16px}
+
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.8);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);height:64px;display:flex;align-items:center}
+header .container{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:16px;letter-spacing:0.15em;text-decoration:none;text-transform:uppercase}
+.logo svg{width:24px;height:24px;flex-shrink:0}
+
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;top:-20%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 50%, rgba(0,220,255,0.03) 0%, transparent 60%)}
+.hero-bg::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(0deg,#0a0a0a,transparent)}
+.hero .container{position:relative;z-index:1;text-align:center}
+.hero h1{font-size:clamp(48px,10vw,120px);font-weight:900;line-height:0.92;color:#fff;letter-spacing:-0.04em;text-transform:uppercase;margin-bottom:8px}
+.hero h1 .dark{color:rgba(255,255,255,0.06);-webkit-text-stroke:1px rgba(255,255,255,0.08)}
+.hero p{font-size:clamp(16px,2vw,22px);color:#808090;max-width:640px;margin:20px auto 36px;line-height:1.6;font-weight:400}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+#hero-canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;opacity:0.15;pointer-events:none;z-index:-1}
+@media(max-width:768px){
+  .hero h1{font-size:clamp(40px,15vw,80px)}
+  #hero-canvas{width:400px;height:400px}
+}
+
+.badge-bar{background:#0d0d0d;border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);padding:20px 0;text-align:center}
+.badge-bar .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 24px;border-radius:40px;background:rgba(0,220,255,0.06);border:1px solid rgba(0,220,255,0.12);font-size:13px;font-weight:500;color:#00dcff}
+.badge-bar .badge span{color:#808090;font-weight:400}
+.badge-bar .badge em{font-style:normal;color:#f0c040}
+
+.platform-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.platform-card{padding:40px 32px;border-radius:12px;background:linear-gradient(145deg,#111,#0a0a0a);border:1px solid rgba(255,255,255,0.04);text-align:center;transition:all 0.3s}
+.platform-card:hover{border-color:rgba(0,220,255,0.12);transform:translateY(-4px)}
+.platform-card .icon{font-size:36px;margin-bottom:16px}
+.platform-card h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px}
+.platform-card h3 .tag{font-size:10px;background:rgba(0,220,255,0.1);color:#00dcff;padding:2px 8px;border-radius:12px;margin-left:6px;font-weight:600;vertical-align:middle;text-transform:uppercase}
+.platform-card p{font-size:13px;color:#707080;line-height:1.7;margin-bottom:16px}
+.platform-card .price{font-size:28px;font-weight:800;color:#fff;margin-bottom:4px}
+.platform-card .price-sub{font-size:12px;color:#505060}
+.platform-card ul{list-style:none;text-align:left;margin:16px 0;font-size:13px;color:#9090a0}
+.platform-card ul li{padding:6px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.platform-card ul li::before{content:'✓';color:#00dcff;font-weight:700}
+.platform-card .btn{width:100%;justify-content:center;margin-top:8px}
+@media(max-width:900px){.platform-grid{grid-template-columns:1fr}}
+
+.section-label{font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:#606070;margin-bottom:12px}
+.section-title{font-size:clamp(32px,4vw,52px);font-weight:800;color:#fff;margin-bottom:16px;line-height:1.1;letter-spacing:-0.02em}
+.section-sub{font-size:clamp(15px,1.5vw,18px);color:#707080;max-width:640px;line-height:1.7}
+.center{text-align:center}
+.center .section-sub{margin-left:auto;margin-right:auto}
+
+.workflow{margin-top:60px;display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+.workflow-step{display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 32px;background:linear-gradient(145deg,#111,#0a0a0a);border:1px solid rgba(255,255,255,0.04);border-radius:10px;min-width:140px}
+.workflow-step .step-icon{font-size:32px}
+.workflow-step .step-label{font-size:12px;color:#707080;text-align:center;max-width:120px}
+.workflow-arrow{font-size:28px;color:rgba(0,220,255,0.3);padding:0 12px;font-weight:300}
+@media(max-width:768px){.workflow{flex-direction:column;gap:8px}.workflow-arrow{transform:rotate(90deg);padding:4px 0}}
+
+.showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.showcase-card{border-radius:12px;overflow:hidden;background:#0d0d0d;border:1px solid rgba(255,255,255,0.04);transition:all 0.3s}
+.showcase-card:hover{border-color:rgba(0,220,255,0.12);transform:translateY(-4px)}
+.showcase-card canvas{width:100%;height:auto;display:block;aspect-ratio:960/200}
+.showcase-card .meta{padding:16px 20px}
+.showcase-card .meta h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.showcase-card .meta p{font-size:12px;color:#606070}
+@media(max-width:900px){.showcase-grid{grid-template-columns:1fr}}
+
+.feature-block{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:80px}
+.feature-block:first-child{margin-top:48px}
+.feature-block:nth-child(even) .feature-visual{order:2}
+.feature-block:nth-child(even) .feature-text{order:1}
+.feature-text h3{font-size:clamp(22px,2.5vw,32px);font-weight:800;color:#fff;margin-bottom:12px;line-height:1.2}
+.feature-text h3 .accent{color:#00dcff}
+.feature-text p{font-size:15px;color:#808090;line-height:1.8;margin-bottom:16px}
+.feature-text .spec-tag{display:inline-flex;gap:4px;font-size:11px;color:#606070;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:4px 10px;border-radius:6px;margin-right:6px;margin-bottom:6px}
+.feature-visual canvas{width:100%;aspect-ratio:4/3;border-radius:10px;background:#0d0d0d;display:block}
+@media(max-width:768px){
+  .feature-block{grid-template-columns:1fr;gap:24px}
+  .feature-block:nth-child(even) .feature-visual{order:1}
+  .feature-block:nth-child(even) .feature-text{order:2}
+}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;align-items:start}
+.pricing-card{padding:40px 32px;border-radius:12px;background:linear-gradient(145deg,#111,#0a0a0a);border:1px solid rgba(255,255,255,0.04);text-align:center;transition:all 0.3s;position:relative}
+.pricing-card.featured{border-color:#00dcff;box-shadow:0 0 40px rgba(0,220,255,0.08)}
+.pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#00dcff;color:#0a0a0a;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:0.08em}
+.pricing-card:hover{border-color:rgba(0,220,255,0.2);transform:translateY(-4px)}
+.pricing-card h3{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.pricing-card .price{font-size:42px;font-weight:900;color:#fff;margin:16px 0 4px;letter-spacing:-0.03em}
+.pricing-card .price-sub{font-size:13px;color:#606070;margin-bottom:20px}
+.pricing-card ul{list-style:none;text-align:left;margin:20px 0;font-size:13px;color:#9090a0}
+.pricing-card ul li{padding:8px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.pricing-card ul li::before{content:'✓';color:#00dcff;font-weight:700}
+.pricing-card .btn{width:100%;justify-content:center}
+.pricing-card .btn-outline{border-color:rgba(255,255,255,0.1)}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}}
+
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:48px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.specs-grid .spec-row{display:contents}
+.specs-grid .spec-row > *{padding:16px 24px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px}
+.specs-grid .spec-label{color:#9090a0;font-weight:500;background:rgba(255,255,255,0.02)}
+.specs-grid .spec-value{color:#c0c8d0;background:rgba(255,255,255,0.01)}
+@media(max-width:600px){.specs-grid{grid-template-columns:1fr}}
+
+.faq-grid{max-width:720px;margin:48px auto 0}
+details.faq-item{background:linear-gradient(145deg,#111,#0a0a0a);border:1px solid rgba(255,255,255,0.04);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:border-color 0.2s}
+details.faq-item[open]{border-color:rgba(0,220,255,0.12)}
+details.faq-item summary{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-size:14px;font-weight:600;color:#c0c8d0;list-style:none;user-select:none}
+details.faq-item summary::-webkit-details-marker{display:none}
+details.faq-item summary::after{content:'+';font-size:18px;color:#606070;transition:transform 0.2s}
+details.faq-item[open] summary::after{transform:rotate(45deg);color:#00dcff}
+details.faq-item .faq-answer{padding:0 22px 18px;font-size:13px;color:#707080;line-height:1.8}
+
+.cta-section{text-align:center;background:linear-gradient(180deg,transparent,rgba(0,220,255,0.02),transparent);border-top:1px solid rgba(0,220,255,0.04);border-bottom:1px solid rgba(0,220,255,0.04)}
+.cta-section h2{font-size:clamp(32px,5vw,56px)}
+.cta-section .section-sub{margin:16px auto 36px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cta-formats{display:flex;justify-content:center;gap:20px;margin-top:24px;font-size:12px;color:#505060}
+.cta-formats span{display:flex;align-items:center;gap:4px;color:#606070}
+
+footer{background:#060606;border-top:1px solid rgba(255,255,255,0.03);padding:40px 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:12px;color:#505060}
+footer a{color:#00dcff;text-decoration:none;font-size:12px}
+footer a:hover{text-decoration:underline}
+
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#222;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#333}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">
+    <svg viewBox="0 0 30 30"><path d="M15 15 Q10 6 18 3 Q24 2 22 10 Z" fill="#00dcff" opacity="0.9"/><path d="M15 15 Q24 12 27 20 Q28 26 20 24 Z" fill="#00dcff" opacity="0.7"/><path d="M15 15 Q14 24 6 25 Q0 24 4 17 Z" fill="#00dcff" opacity="0.8"/><circle cx="15" cy="15" r="3" fill="#0a0a0a"/><circle cx="15" cy="15" r="1.5" fill="#00dcff"/></svg>
+    FanTune
+  </a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="#pricing" style="color:#808090;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.03em">Pricing</a>
+    <a href="#pricing" class="btn btn-primary" style="padding:8px 18px;font-size:12px">Buy $49</a>
+  </div>
+</div>
+</header>
+
+<section class="hero" id="hero">
+<div class="hero-bg"></div>
+<canvas id="hero-canvas" width="600" height="600"></canvas>
+<div class="container">
+  <h1>
+    <span class="dark">FAN</span><br/>
+    TUNE
+  </h1>
+  <p>The world's first mechanical resonance pitch shifter. <br/>Three fan blades carve your voice — no DAW, no install, no bullshit.</p>
+  <div class="hero-actions">
+    <a href="demo.html" target="_blank" class="btn btn-primary btn-lg">Try in Browser →</a>
+    <a href="#pricing" class="btn btn-outline btn-lg">Buy $49</a>
+  </div>
+</div>
+</section>
+
+<div class="badge-bar">
+  <div class="badge">
+    ⚡ NoDAW READY
+    <span>·</span>
+    <span>Works in any browser</span>
+    <span>·</span>
+    <span>Export WAV</span>
+    <span>·</span>
+    <span>VST3 / AU / CLAP</span>
+    <span>·</span>
+    <em>Standalone included</em>
+  </div>
+</div>
+
+<section class="section" id="platform">
+<div class="container center">
+  <div class="section-label fade-in">Three Ways to Use FanTune</div>
+  <h2 class="section-title fade-in">From browser to studio.</h2>
+  <p class="section-sub fade-in">No account. No iLok. No subscription. Just the fan.</p>
+  <div class="platform-grid">
+    <div class="platform-card fade-in">
+      <div class="icon">🌐</div>
+      <h3>Web App <span class="tag">Free</span></h3>
+      <div class="price">$0</div>
+      <div class="price-sub">Forever</div>
+      <ul>
+        <li>Open in any browser</li>
+        <li>Load audio files</li>
+        <li>Export WAV</li>
+        <li>Full fan DSP engine</li>
+        <li>5 factory presets</li>
+      </ul>
+      <a href="demo.html" target="_blank" class="btn btn-primary">Try Now →</a>
+    </div>
+    <div class="platform-card fade-in">
+      <div class="icon">🔌</div>
+      <h3>Plugin <span class="tag">Pro</span></h3>
+      <div class="price">$49</div>
+      <div class="price-sub">Perpetual license</div>
+      <ul>
+        <li>VST3 / AU / CLAP</li>
+        <li>64-bit double precision</li>
+        <li>MIDI learn</li>
+        <li>A/B comparison</li>
+        <li>Preset save/load</li>
+      </ul>
+      <a href="#pricing" class="btn btn-outline">Buy →</a>
+    </div>
+    <div class="platform-card fade-in">
+      <div class="icon">🖥</div>
+      <h3>Standalone <span class="tag">Included</span></h3>
+      <div class="price">Free</div>
+      <div class="price-sub">With Pro license</div>
+      <ul>
+        <li>No DAW required</li>
+        <li>Desktop audio app</li>
+        <li>Drag-and-drop files</li>
+        <li>Bypass + A/B</li>
+        <li>CPU < 1%</li>
+      </ul>
+      <a href="#pricing" class="btn btn-outline">Get Pro →</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="workflow">
+<div class="container center">
+  <div class="section-label fade-in">How It Works</div>
+  <h2 class="section-title fade-in">NoDAW workflow.</h2>
+  <p class="section-sub fade-in">From voice to finished track. No interface. No learning curve. No DAW.</p>
+  <div class="workflow fade-in">
+    <div class="workflow-step">
+      <div class="step-icon">🎤</div>
+      <div class="step-label">Sing / Load audio</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="step-icon">🌀</div>
+      <div class="step-label">FanTune engine processes</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="step-icon">💾</div>
+      <div class="step-label">Export WAV / MP3</div>
+    </div>
+    <div class="workflow-arrow">→</div>
+    <div class="workflow-step">
+      <div class="step-icon">☁️</div>
+      <div class="step-label">Upload anywhere</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="showcase">
+<div class="container center">
+  <div class="section-label fade-in">In Action</div>
+  <h2 class="section-title fade-in">Three voices. One fan.</h2>
+  <p class="section-sub fade-in">Default, aggressive, and warm — three flavours of mechanical chop.</p>
+  <div class="showcase-grid">
+    <div class="showcase-card fade-in">
+      <canvas data-shot="default" width="960" height="200"></canvas>
+      <div class="meta">
+        <h4>🌀 Default — Arctic Chorus</h4>
+        <p>Speed 1.2 Hz · Pitch 0 ct · Mix 100%. Balanced blade-pass modulation with soft motor atmosphere.</p>
+      </div>
+    </div>
+    <div class="showcase-card fade-in">
+      <canvas data-shot="grille" width="960" height="200"></canvas>
+      <div class="meta">
+        <h4>🔥 GRILLE — Deep Chop</h4>
+        <p>Speed 4.0 Hz · Distance max. Lips on the guard. Aggressive 30 dB AM depth — the classic bedroom fan sound.</p>
+      </div>
+    </div>
+    <div class="showcase-card fade-in">
+      <canvas data-shot="behind" width="960" height="200"></canvas>
+      <div class="meta">
+        <h4>🌊 BEHIND — Soft & Warm</h4>
+        <p>Speed 0.8 Hz · Distance min. 12" from intake. Motor hum + plastic box resonance — pure nostalgia.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="features">
+<div class="container">
+  <div class="section-label fade-in center">The Technology</div>
+  <h2 class="section-title fade-in center">Built from actual fan physics.</h2>
+  <div class="feature-block fade-in">
+    <div class="feature-visual"><canvas id="viz-am" width="400" height="300"></canvas></div>
+    <div class="feature-text">
+      <h3><span class="accent">Blade-Pass</span> Amplitude Modulation</h3>
+      <p>Three asymmetric fan blades carve your vocal at 18–72 Hz. Each blade creates a fast-attack, slow-release gate as it crosses the vocal path. This is <em>not</em> smooth tremolo — it is a hard occlusion gate. The voice literally disappears between blade passes. The brain interpolates the missing pitch, creating the "Auto-Tune before Auto-Tune" illusion.</p>
+      <span class="spec-tag">3 blades per rotation</span>
+      <span class="spec-tag">18–72 Hz pass range</span>
+      <span class="spec-tag">30 dB AM depth (GRILLE)</span>
+    </div>
+  </div>
+  <div class="feature-block fade-in">
+    <div class="feature-visual"><canvas id="viz-comb" width="400" height="300"></canvas></div>
+    <div class="feature-text">
+      <h3><span class="accent">Housing Comb</span> + Motor Stack</h3>
+      <p>The plastic fan enclosure creates a 4–8 tap comb filter from sound reflections between the grille and rear housing (0.4–3.5 ms delays). The induction motor injects a 60 Hz fundamental + 120 Hz harmonic with bandpass-filtered sidebands. At BEHIND position, this is the dominant texture — warm, humming, plastic-box nostalgia.</p>
+      <span class="spec-tag">4–8 comb taps</span>
+      <span class="spec-tag">60 / 120 Hz motor hum</span>
+      <span class="spec-tag">BPF sideband modulation</span>
+    </div>
+  </div>
+  <div class="feature-block fade-in">
+    <div class="feature-visual"><canvas id="viz-vintage" width="400" height="300"></canvas></div>
+    <div class="feature-text">
+      <h3><span class="accent">Vintage</span> Pitch Mode</h3>
+      <p>Pitch correction that gates OFF during blade close. Instead of trying to pitch-correct silence, FanTune lets the chop speak. The grain shifter engages only during the open phase of each blade pass. The result: the "perceptual tune" that 2005 bedroom singers discovered — pitch correction that sounds like it's fighting through a fan, not applied on top of it.</p>
+      <span class="spec-tag">YIN v2 pitch detection</span>
+      <span class="spec-tag">Scale-snap + glide + humanize</span>
+      <span class="spec-tag">Gates off during blade occlusion</span>
+    </div>
+  </div>
+  <div class="feature-block fade-in">
+    <div class="feature-visual"><canvas id="viz-nodaw" width="400" height="300"></canvas></div>
+    <div class="feature-text">
+      <h3><span class="accent">NoDAW</span> — Zero Install</h3>
+      <p>Open <strong>demo.html</strong> in any modern browser. Load an audio file. Hear the fan effect in real time via Web Audio API. Export your processed audio as WAV. No DAW, no installer, no iLok, no account. The plugin and standalone versions add DAW integration, 64-bit precision, MIDI learn, and full preset management — but the core experience lives in the browser.</p>
+      <span class="spec-tag">Web Audio API</span>
+      <span class="spec-tag">ScriptProcessor + AnalyzerNode</span>
+      <span class="spec-tag">0.54 ms latency</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="techspecs">
+<div class="container center">
+  <div class="section-label fade-in">Technical Specifications</div>
+  <h2 class="section-title fade-in">The numbers.</h2>
+  <div class="specs-grid fade-in">
+    <div class="spec-row"><div class="spec-label">Plugin Formats</div><div class="spec-value">VST3 · AU (macOS) · CLAP · Standalone · Web</div></div>
+    <div class="spec-row"><div class="spec-label">OS Support</div><div class="spec-value">Windows 10+ · macOS 11+ · Linux (glibc 2.31+) · Any browser</div></div>
+    <div class="spec-row"><div class="spec-label">Architecture</div><div class="spec-value">x86_64 · arm64 (macOS universal) · WebAssembly-ready</div></div>
+    <div class="spec-row"><div class="spec-label">Sample Rate</div><div class="spec-value">44.1k / 48k / 96k Hz</div></div>
+    <div class="spec-row"><div class="spec-label">Latency</div><div class="spec-value">26 samples (0.54 ms at 48 kHz)</div></div>
+    <div class="spec-row"><div class="spec-label">CPU Usage</div><div class="spec-value">&lt; 1% @ 48 kHz, 64-sample buffer (Core i7)</div></div>
+    <div class="spec-row"><div class="spec-label">Blade-Pass Range</div><div class="spec-value">18–72 Hz (3-blade, 6–24 Hz rotation)</div></div>
+    <div class="spec-row"><div class="spec-label">AM Depth Range</div><div class="spec-value">3 dB – 42 dB (GRILLE: 30 dB default)</div></div>
+    <div class="spec-row"><div class="spec-label">Pitch Detection</div><div class="spec-value">YIN v2 autocorrelation (75–1100 Hz)</div></div>
+    <div class="spec-row"><div class="spec-label">NoDAW Export</div><div class="spec-value">WAV 44.1k/48k · 16/24-bit · Drag-and-drop</div></div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="pricing">
+<div class="container center">
+  <div class="section-label fade-in">Pricing</div>
+  <h2 class="section-title fade-in">One fan. Three ways in.</h2>
+  <p class="section-sub fade-in">No subscriptions. No iLok. Perpetual licenses with free updates.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-in">
+      <h3>Personal</h3>
+      <div class="price">$0</div>
+      <div class="price-sub">Free forever</div>
+      <ul>
+        <li>Web app in browser</li>
+        <li>Load + process audio</li>
+        <li>Export WAV</li>
+        <li>5 factory presets</li>
+        <li>Full fan DSP engine</li>
+      </ul>
+      <a href="demo.html" target="_blank" class="btn btn-outline">Try Free</a>
+    </div>
+    <div class="pricing-card featured fade-in">
+      <h3>Pro</h3>
+      <div class="price">$49</div>
+      <div class="price-sub">Perpetual license · 2 activations</div>
+      <ul>
+        <li>VST3 + AU + CLAP + Standalone</li>
+        <li>64-bit double precision</li>
+        <li>MIDI learn + A/B comparison</li>
+        <li>Unlimited presets save/load</li>
+        <li>All factory presets + bonus</li>
+        <li>Free updates v1.x</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/9a8b7c6d-1234-5678-abcd-ef0123456789" target="_blank" rel="noopener" class="btn btn-primary">Buy $49 →</a>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Studio</h3>
+      <div class="price">$99</div>
+      <div class="price-sub">Perpetual · 5 activations</div>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Commercial license</li>
+        <li>5 activations</li>
+        <li>Priority email support</li>
+        <li>Beta access</li>
+        <li>FanTune + future plugin bundle</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/f1e2d3c4-5678-9abc-def0-123456789abc" target="_blank" rel="noopener" class="btn btn-outline">Buy $99 →</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="faq">
+<div class="container center">
+  <div class="section-label fade-in">FAQ</div>
+  <h2 class="section-title fade-in">Common questions.</h2>
+  <div class="faq-grid fade-in">
+    <details class="faq-item">
+      <summary>What does "NoDAW" mean?</summary>
+      <div class="faq-answer">NoDAW means you can use FanTune without opening a DAW at all. The browser version (demo.html) loads in any modern browser — no install, no account, no plugins. Just open the page, load audio, and hear the effect. Export WAV and upload to SoundCloud, TikTok, or your DAW for mixing. The VST3/AU/CLAP plugin version adds DAW integration for producers who want pitch correction, MIDI control, and preset management in their existing workflow.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Is this just another Auto-Tune clone?</summary>
+      <div class="faq-answer">No. FanTune is the opposite of Auto-Tune. The primary effect is amplitude modulation from physical fan blades — the voice gets literally chopped into pieces. Pitch correction is a secondary layer that gates off during blade close. The "pitchy" sound comes from the chop itself, not from grain shifting. This is what people actually heard when they sang into fans in 2005, not what modern pitch correction sounds like.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What DAWs are supported?</summary>
+      <div class="faq-answer">Any DAW that supports VST3 (Ableton Live 11+, FL Studio, Cubase, Reaper, Studio One, Bitwig) or AU (Logic Pro, GarageBand). CLAP format is supported for Bitwig and Reaper with CLAP support. The standalone version works as a regular desktop audio application with drag-and-drop file loading — no DAW needed.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Can I buy once and use on multiple machines?</summary>
+      <div class="faq-answer">Yes. The Pro license includes 2 activations — use on your studio desktop and your laptop. The Studio license includes 5 activations for larger setups. All licenses are perpetual with free v1.x updates. No subscriptions, no iLok, no dongle.</div>
+    </details>
+    <details class="faq-item">
+      <summary>How is the web version different from the plugin?</summary>
+      <div class="faq-answer">The web version (demo.html) uses Web Audio API with single-precision float processing — great for auditioning the effect. The plugin version uses 64-bit double precision DSP, adds MIDI learn, A/B comparison, preset save/load, unlimited preset slots, and lower latency (26 samples vs browser latency). The fan DSP engine is the same in both — the same blade occlusion math, the same comb filter, the same motor hum.</div>
+    </details>
+  </div>
+</div>
+</section>
+
+<section class="section cta-section" id="buy">
+<div class="container center">
+  <div class="section-label fade-in">Start Here</div>
+  <h2 class="section-title fade-in">Try FanTune right now.</h2>
+  <p class="section-sub fade-in">No account. No install. Open your browser and chop.</p>
+  <div class="cta-actions fade-in">
+    <a href="demo.html" target="_blank" class="btn btn-primary btn-lg">Open Web App →</a>
+    <a href="#pricing" class="btn btn-gold btn-lg">Buy Pro $49</a>
+  </div>
+  <div class="cta-formats fade-in">
+    <span>⬡ VST3</span>
+    <span>⬡ AU</span>
+    <span>⬡ CLAP</span>
+    <span>⬡ Standalone</span>
+    <span>⬡ Web</span>
+    <span>│</span>
+    <span>Windows · macOS · Linux · Browser</span>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <p>© 2026 FanTune. Built with JUCE 8. Not affiliated with any fan manufacturer.</p>
+  <p><a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">GitHub</a> · <a href="https://opencode.ai" target="_blank" rel="noopener">Documentation</a> · <a href="https://twitter.com">@fantune</a></p>
+</div>
+</footer>
+
+<script>
+// ── HERO FAN (subtle background) ─────────────────────────────────
+const heroCanvas = document.getElementById('hero-canvas');
+const hctx = heroCanvas.getContext('2d');
+const hW = heroCanvas.width, hH = heroCanvas.height;
+const hcx = hW/2, hcy = hH/2;
+let bladeAngle = 0;
+
+function drawHeroFan(angle) {
+  hctx.clearRect(0,0,hW,hH);
+  const r = 260;
+  hctx.save();
+  hctx.translate(hcx, hcy);
+
+  // outer ring
+  hctx.beginPath(); hctx.arc(0,0,r,0,Math.PI*2);
+  hctx.strokeStyle = 'rgba(0,220,255,0.2)'; hctx.lineWidth = 1; hctx.stroke();
+
+  // concentric
+  for(let rr=0.8; rr>=0.2; rr-=0.15){
+    hctx.beginPath(); hctx.arc(0,0,r*rr,0,Math.PI*2);
+    hctx.strokeStyle = 'rgba(0,220,255,0.08)'; hctx.lineWidth = 0.5; hctx.stroke();
+  }
+
+  // wire mesh
+  for(let x=-r; x<=r; x+=16){
+    const d = Math.abs(x);
+    if(d>r) continue;
+    const hh = Math.sqrt(r*r - d*d);
+    hctx.beginPath(); hctx.moveTo(x,-hh); hctx.lineTo(x,hh);
+    hctx.strokeStyle = 'rgba(0,220,255,0.04)'; hctx.lineWidth = 0.5; hctx.stroke();
+  }
+  for(let y=-r; y<=r; y+=16){
+    const d = Math.abs(y);
+    if(d>r) continue;
+    const ww = Math.sqrt(r*r - d*d);
+    hctx.beginPath(); hctx.moveTo(-ww,y); hctx.lineTo(ww,y);
+    hctx.strokeStyle = 'rgba(0,220,255,0.04)'; hctx.lineWidth = 0.5; hctx.stroke();
+  }
+
+  // blades
+  hctx.rotate(angle);
+  for(let i=0; i<3; i++){
+    hctx.save();
+    hctx.rotate((i/3)*Math.PI*2);
+    hctx.beginPath();
+    hctx.moveTo(0,0);
+    hctx.bezierCurveTo(-14,-35,10,-88,20,-105);
+    hctx.bezierCurveTo(32,-92,28,-44,0,0);
+    hctx.closePath();
+    hctx.fillStyle = 'rgba(0,220,255,0.06)';
+    hctx.fill();
+    hctx.strokeStyle = 'rgba(0,220,255,0.12)';
+    hctx.lineWidth = 0.5;
+    hctx.stroke();
+    hctx.restore();
+  }
+
+  // hub
+  hctx.beginPath(); hctx.arc(0,0,20,0,Math.PI*2);
+  hctx.fillStyle = 'rgba(0,220,255,0.08)';
+  hctx.fill();
+  hctx.strokeStyle = 'rgba(0,220,255,0.2)'; hctx.lineWidth=1; hctx.stroke();
+  hctx.beginPath(); hctx.arc(0,0,4,0,Math.PI*2);
+  hctx.fillStyle = 'rgba(0,220,255,0.3)'; hctx.fill();
+
+  hctx.restore();
+}
+
+function animateHeroFan() {
+  bladeAngle += 0.008;
+  drawHeroFan(bladeAngle);
+  requestAnimationFrame(animateHeroFan);
+}
+animateHeroFan();
+
+// ── FEATURE VISUALIZATIONS ──────────────────────────────────────
+function drawVizAM(canvas) {
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0,0,w,h);
+
+  // AM envelope
+  ctx.beginPath(); ctx.moveTo(30,140);
+  for(let x=0; x<=340; x+=2){
+    const bladePhase = (x/340)*Math.PI*6;
+    const bladeDip = 0.5*(1+Math.cos(bladePhase));
+    const envelope = 30 + bladeDip * 110;
+    ctx.lineTo(x+30, h - envelope);
+  }
+  ctx.strokeStyle = '#00dcff'; ctx.lineWidth=2; ctx.stroke();
+
+  // blade markers
+  for(let b=0; b<3; b++){
+    const bx = 30 + (b/3)*340;
+    ctx.beginPath();
+    ctx.moveTo(bx, h-10); ctx.lineTo(bx, h-20);
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth=1; ctx.stroke();
+  }
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='9px system-ui';
+  ctx.fillText('blade 1', 30, h-24);
+  ctx.fillText('blade 2', 143, h-24);
+  ctx.fillText('blade 3', 256, h-24);
+  ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.font='8px system-ui';
+  ctx.fillText('AM Envelope — 3 blade passes per rotation', 20, 18);
+}
+
+function drawVizComb(canvas) {
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0,0,w,h);
+
+  // comb filter response
+  ctx.beginPath();
+  for(let f=0; f<360; f+=2){
+    const freq = 50 + f*18;
+    const comb = Math.abs(Math.cos(freq/820*Math.PI));
+    const x = 20 + (f/360)*360;
+    const y = h - 20 - comb*100;
+    f===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle = '#f0c040'; ctx.lineWidth=1.5; ctx.stroke();
+
+  // motor hum peaks
+  ctx.beginPath(); ctx.moveTo(50, h-20); ctx.lineTo(50, h-70);
+  ctx.strokeStyle = '#ff3366'; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(80, h-20); ctx.lineTo(80, h-50);
+  ctx.strokeStyle = '#ff3366'; ctx.lineWidth=1; ctx.stroke();
+
+  ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.font='8px system-ui';
+  ctx.fillText('Comb Filter + 60/120 Hz Motor Peaks', 20, 18);
+  ctx.fillStyle='rgba(255,255,255,0.1)'; ctx.font='7px system-ui';
+  ctx.fillText('60Hz', 46, h-30);
+  ctx.fillText('120Hz', 76, h-30);
+}
+
+function drawVizVintage(canvas) {
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0,0,w,h);
+
+  // pitch on/off gate
+  ctx.beginPath();
+  for(let x=0; x<=360; x+=2){
+    const phase = (x/360)*Math.PI*4;
+    const gate = 0.5*(1+Math.cos(phase));
+    const level = 20 + gate*100;
+    ctx.lineTo(x+20, h-level);
+  }
+  ctx.strokeStyle = '#00dcff'; ctx.lineWidth=2; ctx.stroke();
+
+  // fill under
+  const lastX = 360+20;
+  ctx.lineTo(lastX, h-20); ctx.lineTo(20, h-20); ctx.closePath();
+  ctx.fillStyle = 'rgba(0,220,255,0.06)'; ctx.fill();
+
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='9px system-ui'; ctx.fillText('pitch ON', 20, 26);
+  ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.font='8px system-ui';
+  ctx.fillText('Pitch correction gates off during blade close', 20, 14);
+  ctx.fillStyle='rgba(255,102,102,0.15)'; ctx.font='9px system-ui';
+  ctx.fillText('OFF', 290, 26);
+}
+
+function drawVizNoDAW(canvas) {
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w=canvas.width, h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = '#0d0d0d'; ctx.fillRect(0,0,w,h);
+
+  // browser icon
+  ctx.fillStyle='rgba(0,220,255,0.1)'; 
+  ctx.beginPath(); ctx.roundRect(30,40,70,70,8); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='10px system-ui'; ctx.textAlign='center';
+  ctx.fillText('🌐', 65, 75);
+  ctx.fillText('Browser', 65, 98);
+
+  // arrow
+  ctx.fillStyle='rgba(0,220,255,0.2)'; ctx.font='18px system-ui';
+  ctx.fillText('→', 115, 78);
+
+  // FanTune
+  ctx.fillStyle='rgba(0,220,255,0.12)'; 
+  ctx.beginPath(); ctx.roundRect(140,35,100,80,8); ctx.fill();
+  ctx.fillStyle='rgba(0,220,255,0.3)'; ctx.font='bold 9px system-ui'; ctx.fillText('FanTune', 190, 65);
+  ctx.fillStyle='rgba(255,255,255,0.1)'; ctx.font='7px system-ui'; ctx.fillText('Web Audio API', 190, 82);
+  ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.font='7px system-ui'; ctx.fillText('DSP Engine', 190, 96);
+
+  // arrow
+  ctx.fillStyle='rgba(0,220,255,0.2)'; ctx.font='18px system-ui';
+  ctx.fillText('→', 255, 78);
+
+  // Export
+  ctx.fillStyle='rgba(240,192,64,0.08)'; 
+  ctx.beginPath(); ctx.roundRect(280,40,70,70,8); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.font='9px system-ui'; ctx.textAlign='center';
+  ctx.fillText('💾', 315, 72);
+  ctx.fillText('Export', 315, 95);
+
+  ctx.fillStyle='rgba(255,255,255,0.08)'; ctx.font='8px system-ui'; ctx.textAlign='left';
+  ctx.fillText('NoDAW Pipeline: Open · Process · Export', 20, 16);
+}
+
+// Draw all feature canvases
+drawVizAM(document.getElementById('viz-am'));
+drawVizComb(document.getElementById('viz-comb'));
+drawVizVintage(document.getElementById('viz-vintage'));
+drawVizNoDAW(document.getElementById('viz-nodaw'));
+
+// ── PRODUCT SHOT RENDERER ────────────────────────────────────────
+function drawProductShot(canvas, mode) {
+  const ctx = canvas.getContext('2d');
+  const w=960, h=200;
+  canvas.width=w; canvas.height=h;
+
+  // Chassis background
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,'#1c1c28'); grad.addColorStop(0.3,'#141420');
+  grad.addColorStop(0.7,'#111118'); grad.addColorStop(1,'#0e0e18');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);
+
+  // Header
+  ctx.fillStyle='#161622';
+  ctx.fillRect(0,0,w,32);
+
+  // Fan guard (centered, 140x140)
+  const cx=480, cy=110, r=70;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,220,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+
+  for(let rr=0.8; rr>=0.15; rr-=0.13){
+    ctx.beginPath(); ctx.arc(cx,cy,r*rr,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,220,255,0.07)'; ctx.lineWidth=0.5; ctx.stroke();
+  }
+
+  // Blades
+  const speed = mode==='grille' ? 4 : mode==='behind' ? 0.8 : 1.2;
+  const bAngle = Date.now()/1000 * speed * 0.5;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(bAngle);
+  for(let i=0; i<3; i++){
+    ctx.save(); ctx.rotate((i/3)*Math.PI*2);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(-8,-20,6,-50,12,-60);
+    ctx.bezierCurveTo(18,-52,14,-24,0,0);
+    ctx.closePath();
+    const opacity = mode==='grille' ? 0.3 : mode==='behind' ? 0.06 : 0.12;
+    ctx.fillStyle=`rgba(0,220,255,${opacity})`;
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Hub
+  ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2);
+  ctx.fillStyle='#1a2030'; ctx.fill();
+  ctx.strokeStyle='rgba(0,220,255,0.3)'; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2);
+  ctx.fillStyle='#00dcff'; ctx.fill();
+
+  // Knobs (mini representations)
+  const knobPositions = [
+    [120,130],[160,130],[200,130],[240,130],
+    [720,130],[760,130],[800,130],[840,130]
+  ];
+  knobPositions.forEach(([kx,ky])=>{
+    ctx.beginPath(); ctx.arc(kx,ky,10,0,Math.PI*2);
+    ctx.fillStyle='#181828'; ctx.fill();
+    ctx.strokeStyle='rgba(0,220,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    const val = mode==='grille' ? 0.8 : mode==='behind' ? 0.3 : 0.55;
+    const sa = Math.PI*0.75, ea = Math.PI*2.25, va = sa + val*(ea-sa);
+    ctx.beginPath(); ctx.arc(kx,ky,8,sa,va);
+    ctx.strokeStyle='#00dcff'; ctx.lineWidth=2; ctx.stroke();
+  });
+
+  // Brand
+  ctx.fillStyle='rgba(0,220,255,0.7)'; ctx.font='bold 11px system-ui';
+  ctx.textAlign='left'; ctx.fillText('FANTUNE', 14, 20);
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='8px system-ui';
+  ctx.fillText('Spectral Fan Modulator', 74, 20);
+
+  // Mode label
+  const labels = {default:'Arctic Chorus I', grille:'GRILLE — Deep Chop', behind:'BEHIND — Soft & Warm'};
+  ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='8px system-ui'; ctx.textAlign='center';
+  ctx.fillText(labels[mode], 480, 20);
+}
+
+document.querySelectorAll('[data-shot]').forEach(canvas => {
+  drawProductShot(canvas, canvas.dataset.shot);
+});
+
+// ── FADE-IN SCROLL OBSERVER ─────────────────────────────────────
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+  });
+}, {threshold:0.08, rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+// ── CLOSE FAQ ON ESC ─────────────────────────────────────────────
+document.querySelectorAll('details.faq-item').forEach(d=>{
+  d.querySelector('summary').addEventListener('click',e=>{
+    // allow default toggle
+  });
+});
+</script>
+</body>
+</html>

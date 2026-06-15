@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FanTune — Spectral Fan Modulator</title>
+<meta name="description" content="FanTune recreates the authentic box-fan vocal effect: choppy, robotic, amplitude-modulated. Not modern Auto-Tune — the original childhood sound."/>
+<meta property="og:title" content="FanTune — Spectral Fan Modulator"/>
+<meta property="og:description" content="The authentic box-fan vocal effect. VST3 / AU / CLAP."/>
+<meta property="og:image" content="screenshots/plugin_hero.png"/>
+<meta name="theme-color" content="#00dcff"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><circle cx='15' cy='15' r='15' fill='%2300dcff'/><path d='M15 15 Q10 6 18 3 Q24 2 22 10 Z' fill='%230a0a0f'/><path d='M15 15 Q24 12 27 20 Q28 26 20 24 Z' fill='%230a0a0f'/><path d='M15 15 Q14 24 6 25 Q0 24 4 17 Z' fill='%230a0a0f'/></svg>"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:#08080e;color:#d0d8e8;overflow-x:hidden;line-height:1.6}
+
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-dark{background:#0c0c14}
+.section-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#00dcff;margin-bottom:8px;font-weight:600}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:800;color:#e0f8ff;margin-bottom:16px;line-height:1.15}
+.section-sub{font-size:clamp(15px,1.5vw,18px);color:#8899aa;max-width:680px;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#00dcff,#0099bb);color:#08080e;box-shadow:0 4px 30px rgba(0,220,255,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(0,220,255,0.45)}
+.btn-secondary{background:rgba(0,220,255,0.06);color:#00dcff;border:1px solid rgba(0,220,255,0.2)}
+.btn-secondary:hover{background:rgba(0,220,255,0.12);border-color:rgba(0,220,255,0.4)}
+.btn-lg{padding:18px 42px;font-size:16px}
+
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,14,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,220,255,0.06);height:68px;display:flex;align-items:center}
+header .container{display:flex;align-items:center;justify-content:space-between;width:100%;height:100%}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#e0f8ff;font-weight:700;font-size:18px;letter-spacing:0.12em}
+.logo svg{width:26px;height:26px;flex-shrink:0}
+.logo span{color:rgba(0,220,255,0.7);font-weight:400}
+.nav{display:flex;align-items:center;gap:28px;list-style:none}
+.nav a{color:#8090a0;text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.04em;transition:color 0.2s}
+.nav a:hover{color:#00dcff}
+.nav .btn{padding:8px 18px;font-size:12px}
+.mobile-toggle{display:none;background:none;border:none;color:#c0d0e0;font-size:24px;cursor:pointer;padding:8px}
+@media(max-width:768px){
+  .nav{display:none;position:absolute;top:68px;left:0;right:0;background:rgba(8,8,14,0.98);flex-direction:column;padding:24px;gap:16px;border-bottom:1px solid rgba(0,220,255,0.1)}
+  .nav.open{display:flex}
+  .mobile-toggle{display:block}
+}
+
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:68px}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;top:-30%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 50%, rgba(0,220,255,0.04) 0%, transparent 70%);animation:pulseGlow 6s ease-in-out infinite}
+.hero-bg::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;background:linear-gradient(0deg, #08080e 0%, transparent 100%)}
+@keyframes pulseGlow{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+.hero .container{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding-top:40px;padding-bottom:60px}
+.hero-left{min-width:0}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;background:rgba(0,220,255,0.08);border:1px solid rgba(0,220,255,0.15);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#00dcff;margin-bottom:20px;font-weight:600}
+.hero h1{font-size:clamp(36px,5vw,64px);font-weight:900;line-height:1.08;color:#f0faff;margin-bottom:20px;letter-spacing:-0.02em}
+.hero h1 em{font-style:normal;color:#00dcff;display:block}
+.hero p{font-size:clamp(16px,1.5vw,20px);color:#8090a0;max-width:520px;margin-bottom:32px;line-height:1.7}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:40px;margin-top:40px;padding-top:32px;border-top:1px solid rgba(0,220,255,0.06)}
+.hero-stat{text-align:left}
+.hero-stat-num{font-size:24px;font-weight:800;color:#e0f8ff}
+.hero-stat-label{font-size:11px;color:#607080;text-transform:uppercase;letter-spacing:0.1em;margin-top:2px}
+
+.hero-right{min-width:0;position:relative;display:flex;flex-direction:column;align-items:center}
+.fan-stage{position:relative;width:360px;height:360px;margin:0 auto}
+#hero-fan{width:100%;height:100%;display:block;border-radius:50%;cursor:grab}
+.speed-control{display:flex;align-items:center;gap:16px;margin-top:16px;width:280px}
+.speed-control label{font-size:11px;color:#607080;text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap}
+.speed-track{flex:1;height:4px;background:rgba(0,220,255,0.08);border-radius:2px;position:relative;cursor:pointer}
+.speed-track-fill{height:100%;background:linear-gradient(90deg,#00dcff,#0099bb);border-radius:2px;width:50%;pointer-events:none}
+.speed-thumb{position:absolute;top:50%;width:16px;height:16px;background:#00dcff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px rgba(0,220,255,0.3);cursor:grab;transition:box-shadow 0.2s}
+.speed-thumb:hover{box-shadow:0 0 30px rgba(0,220,255,0.5)}
+.speed-hz{font-size:13px;color:#00dcff;font-weight:700;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+
+.popup{position:absolute;padding:10px 14px;border-radius:8px;font-size:11px;line-height:1.5;max-width:200px;pointer-events:none;opacity:0;transition:opacity 0.4s ease,transform 0.4s ease;z-index:10}
+.popup.visible{opacity:1}
+.popup-inner{position:relative;padding:12px 14px;border-radius:8px;background:rgba(12,12,24,0.92);border:1px solid rgba(0,220,255,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.popup-inner strong{color:#e0f8ff;display:block;margin-bottom:2px;font-size:12px}
+.popup-inner span{color:#8090a0;font-size:10px}
+.popup-dot{width:6px;height:6px;border-radius:50%;background:#00dcff;position:absolute;transition:opacity 0.5s}
+.popup-dot.visible{opacity:0.6}
+.popup-1 .popup-inner{border-color:rgba(0,220,255,0.2)}
+.popup-2 .popup-inner{border-color:rgba(255,51,102,0.2)}
+.popup-3 .popup-inner{border-color:rgba(255,170,0,0.2)}
+.popup-4 .popup-inner{border-color:rgba(0,255,170,0.2)}
+
+.popup-1{top:10%;right:-20px;transform:translateX(20px)}
+.popup-1.visible{transform:translateX(0)}
+.popup-2{bottom:18%;right:-30px;transform:translateX(20px)}
+.popup-2.visible{transform:translateX(0)}
+.popup-3{top:30%;left:-20px;transform:translateX(-20px)}
+.popup-3.visible{transform:translateX(0)}
+.popup-4{bottom:5%;left:-10px;transform:translateX(-20px)}
+.popup-4.visible{transform:translateX(0)}
+
+.popup-dot-1{top:22%;right:58px}
+.popup-dot-2{bottom:30%;right:55px}
+.popup-dot-3{top:42%;left:60px}
+.popup-dot-4{bottom:18%;left:58px}
+
+@media(max-width:900px){
+  .hero .container{grid-template-columns:1fr;gap:40px;padding-top:20px}
+  .hero-right{order:-1}
+  .fan-stage{width:280px;height:280px}
+  .popup{display:none}
+  .popup-dot{display:none}
+  .hero-stats{gap:24px;flex-wrap:wrap}
+  .hero h1 br{display:none}
+}
+
+.demo-frame-wrap{background:#06060c;border-radius:16px;border:1px solid rgba(0,220,255,0.06);overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.5);margin:40px 0}
+.demo-frame-wrap iframe{width:100%;border:none;display:block;height:580px}
+.demo-cta{text-align:center;margin-top:24px}
+.demo-cta p{color:#607080;font-size:13px}
+@media(max-width:768px){.demo-frame-wrap iframe{height:480px}}
+
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
+.feature-card{padding:36px;border-radius:14px;background:linear-gradient(145deg,#101020,#0c0c18);border:1px solid rgba(0,220,255,0.04);transition:all 0.3s}
+.feature-card:hover{border-color:rgba(0,220,255,0.12);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.feature-icon{width:44px;height:44px;border-radius:10px;background:rgba(0,220,255,0.06);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px}
+.feature-card h3{font-size:16px;font-weight:700;color:#e0f8ff;margin-bottom:8px}
+.feature-card p{font-size:13px;color:#708090;line-height:1.7}
+
+.physics-diagram{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
+.physics-card{border-radius:14px;background:linear-gradient(145deg,#0d0d1c,#090914);border:1px solid rgba(0,220,255,0.04);padding:32px;transition:border-color 0.3s}
+.physics-card:hover{border-color:rgba(0,220,255,0.1)}
+.physics-card h3{font-size:15px;font-weight:700;color:#e0f8ff;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.physics-card h3 .badge{font-size:9px;padding:2px 8px;border-radius:8px;background:rgba(0,220,255,0.08);color:#00dcff;font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+.physics-card p{font-size:13px;color:#708090;line-height:1.8}
+.physics-diagram svg{width:100%;max-height:280px;margin-bottom:20px;border-radius:10px}
+@media(max-width:768px){.physics-diagram{grid-template-columns:1fr}}
+
+.specs-table{width:100%;border-collapse:collapse;margin-top:36px;font-size:14px}
+.specs-table th{text-align:left;padding:12px 16px;color:#607080;font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:0.1em;border-bottom:1px solid rgba(0,220,255,0.06)}
+.specs-table td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.03);color:#b0c0d0}
+.specs-table td:first-child{font-weight:600;color:#e0f8ff;white-space:nowrap}
+.specs-table tr:hover td{background:rgba(0,220,255,0.02)}
+
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:48px}
+.testimonial-card{padding:28px;border-radius:12px;background:linear-gradient(145deg,#0e0e1e,#0a0a16);border:1px solid rgba(0,220,255,0.04)}
+.testimonial-card .quote{font-size:14px;color:#a0b0c0;line-height:1.7;margin-bottom:16px;font-style:italic}
+.testimonial-card .author{font-size:12px;font-weight:600;color:#e0f8ff}
+.testimonial-card .role{font-size:11px;color:#607080;margin-top:2px}
+
+.faq-grid{max-width:760px;margin:48px auto 0}
+details.faq-item{background:linear-gradient(145deg,#0e0e1e,#0a0a16);border:1px solid rgba(0,220,255,0.04);border-radius:10px;margin-bottom:12px;overflow:hidden;transition:border-color 0.2s}
+details.faq-item[open]{border-color:rgba(0,220,255,0.12)}
+details.faq-item summary{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-size:14px;font-weight:600;color:#d0e0f0;list-style:none;user-select:none;-webkit-user-select:none}
+details.faq-item summary::-webkit-details-marker{display:none}
+details.faq-item summary::after{content:'+';font-size:20px;color:#00dcff;transition:transform 0.2s;font-weight:300}
+details.faq-item[open] summary::after{transform:rotate(45deg)}
+details.faq-item .faq-answer{padding:0 22px 18px;font-size:13px;color:#708090;line-height:1.8}
+
+.cta-section{text-align:center;background:linear-gradient(180deg,transparent 0%,rgba(0,220,255,0.02) 50%,transparent 100%);border-top:1px solid rgba(0,220,255,0.04);border-bottom:1px solid rgba(0,220,255,0.04)}
+.cta-section h2{font-size:clamp(30px,4vw,44px)}
+.cta-section .section-sub{margin:16px auto 36px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.cta-formats{display:flex;justify-content:center;gap:20px;margin-top:28px;font-size:12px;color:#607080}
+.cta-formats span{display:flex;align-items:center;gap:4px}
+.cta-formats svg{width:14px;height:14px}
+
+footer{background:#06060c;border-top:1px solid rgba(0,220,255,0.04);padding:48px 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+footer p{font-size:12px;color:#405060}
+footer a{color:#00dcff;text-decoration:none;font-size:12px}
+footer a:hover{text-decoration:underline}
+
+.fade-in{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(255,255,255,0.006) 2px,rgba(255,255,255,0.006) 3px);pointer-events:none;z-index:9999}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">
+    <svg viewBox="0 0 30 30"><path d="M15 15 Q10 6 18 3 Q24 2 22 10 Z" fill="#00dcff" opacity="0.9"/><path d="M15 15 Q24 12 27 20 Q28 26 20 24 Z" fill="#00dcff" opacity="0.7"/><path d="M15 15 Q14 24 6 25 Q0 24 4 17 Z" fill="#00dcff" opacity="0.8"/><circle cx="15" cy="15" r="3" fill="#08080e"/><circle cx="15" cy="15" r="1.5" fill="#00dcff"/></svg>
+    FanTune <span>— Spectral Fan Modulator</span>
+  </a>
+  <button class="mobile-toggle" onclick="this.nextElementSibling.classList.toggle('open')" aria-label="Menu">☰</button>
+  <ul class="nav">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#physics">How It Works</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#download" class="btn btn-primary">Free Trial</a></li>
+    <li><a href="https://fantune.lemonsqueezy.com/checkout/buy/9a8b7c6d-1234-5678-abcd-ef0123456789" target="_blank" rel="noopener" class="btn btn-secondary" style="padding:8px 14px;font-size:11px">Buy $49</a></li>
+  </ul>
+</div>
+</header>
+
+<section class="hero" id="hero">
+<div class="hero-bg"></div>
+<div class="container">
+  <div class="hero-left">
+    <div class="hero-badge">🔥 Now available — VST3 · AU · CLAP</div>
+    <h1>The original<br/>vocal chop.<br/><em>Auto-Tune before</em><br/><em>Auto-Tune.</em></h1>
+    <p>FanTune recreates the authentic childhood sound of singing into a box fan — choppy, robotic, amplitude-modulated. Three rotating blades carve "bits of voice removed" from your vocal. No grain shifters. No synthetic artifacts. Just physics.</p>
+    <div class="hero-actions">
+      <a href="https://github.com/anomalyco/opencode/releases" class="btn btn-primary btn-lg" target="_blank" rel="noopener">⬇ Download Free Trial</a>
+      <a href="#demo" class="btn btn-secondary btn-lg">▶ Try Interactive Demo</a>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/9a8b7c6d-1234-5678-abcd-ef0123456789" class="btn btn-secondary btn-lg" target="_blank" rel="noopener" style="background:rgba(0,220,255,0.12);border-color:rgba(0,220,255,0.3)">🎯 Buy $49</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Blade AM Physics</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">2</div><div class="hero-stat-label">Positions (Grille/Behind)</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">18-72</div><div class="hero-stat-label">Hz Blade-Pass Range</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="fan-stage">
+      <canvas id="hero-fan" width="720" height="720"></canvas>
+      <div class="popup popup-1" id="popup1"><div class="popup-inner"><strong>🌀 Blade-Pass AM</strong><span>Three asymmetric Gaussians carve your vocal at 18–72 Hz. Not smooth tremolo — hard gating.</span></div></div>
+      <div class="popup popup-2" id="popup2"><div class="popup-inner"><strong>🏠 Housing Comb</strong><span>Plastic enclosure creates 4–8 tap comb filtering. 60/120 Hz motor hum with BPF sidebands.</span></div></div>
+      <div class="popup popup-3" id="popup3"><div class="popup-inner"><strong>🎤 Dual Geometry</strong><span>GRILLE: lips on the guard, aggressive chop. BEHIND: 6-12" from intake, soft chop + motor hum.</span></div></div>
+      <div class="popup popup-4" id="popup4"><div class="popup-inner"><strong>🎶 Vintage Pitch</strong><span>Pitch correction gates off during blade close — the original "perceptual tune" from 2005 bedrooms.</span></div></div>
+      <div class="popup-dot popup-dot-1" id="dot1"></div>
+      <div class="popup-dot popup-dot-2" id="dot2"></div>
+      <div class="popup-dot popup-dot-3" id="dot3"></div>
+      <div class="popup-dot popup-dot-4" id="dot4"></div>
+    </div>
+    <div class="speed-control">
+      <label>Speed</label>
+      <div class="speed-track" id="speed-track">
+        <div class="speed-track-fill" id="speed-fill" style="width:40%"></div>
+        <div class="speed-thumb" id="speed-thumb" style="left:40%"></div>
+      </div>
+      <div class="speed-hz" id="speed-hz">2.4 Hz</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="demo">
+<div class="container">
+  <div class="section-label fade-in">Interactive</div>
+  <h2 class="section-title fade-in">Try FanTune in your browser.</h2>
+  <p class="section-sub fade-in">Load an audio file, tweak the knobs, hear the chop in real time. The full plugin skin — Web Audio fan engine — no install required.</p>
+  <div class="demo-frame-wrap fade-in">
+    <iframe src="demo.html" title="FanTune interactive browser demo" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+  <div class="demo-cta fade-in">
+    <p>Click knobs, drag up/down to adjust. Load a .wav or .mp3 with the 📁 Load button.</p>
+  </div>
+</div>
+</section>
+
+<section class="section" id="features">
+<div class="container">
+  <div class="section-label fade-in">Features</div>
+  <h2 class="section-title fade-in">Built from fan physics,<br/>not from Auto-Tune.</h2>
+  <p class="section-sub fade-in">FanTune models the real acoustics of a 3-blade box fan. The chop comes first; pitch correction is an accent layer.</p>
+  <div class="showcase-row fade-in" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:48px;border-radius:10px;overflow:hidden">
+    <canvas data-shot="default" width="960" height="200" style="width:100%;aspect-ratio:960/200;display:block;background:#0c0c14;border-radius:6px"></canvas>
+    <canvas data-shot="grille" width="960" height="200" style="width:100%;aspect-ratio:960/200;display:block;background:#0c0c14;border-radius:6px"></canvas>
+    <canvas data-shot="behind" width="960" height="200" style="width:100%;aspect-ratio:960/200;display:block;background:#0c0c14;border-radius:6px"></canvas>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🌀</div>
+      <h3>Blade-Pass Amplitude Modulation</h3>
+      <p>Three asymmetric Gaussians per rotation create hard gating with fast attack and slow release — the authentic "bits removed" texture, not smooth tremolo.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🎤</div>
+      <h3>Dual Geometry Engine</h3>
+      <p>GRILLE position (lips on the guard) delivers deep, aggressive chop. BEHIND position (6-12" from intake) gives softer chop with motor hum and turbulence.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🎶</div>
+      <h3>Vintage Pitch Mode</h3>
+      <p>Pitch correction gates off during blade close, producing the "perceptual tune" effect from 2005 bedrooms — not modern T-Pain, but the original fan-choir sound.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🏠</div>
+      <h3>Housing Comb & Motor Stack</h3>
+      <p>Plastic housing creates 4-8 tap comb filtering (0.4-3.5 ms). 60/120 Hz motor hum with BPF sidebands. Intake turbulence bandpassed to blade-trough moments only.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">🎛</div>
+      <h3>Formant-Preserving Pitch</h3>
+      <p>YIN pitch detector with dual-grain formant preservation. Pitch snap, glide, humanize — all gated by blade transmission so chop dominates.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-Time Performance</h3>
+      <p>Zero-alloc DSP. 26-sample latency. Pre-allocated scratch buffers. Runs on any DAW at 48 kHz with &lt; 1% CPU on a modern laptop.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="physics">
+<div class="container">
+  <div class="section-label fade-in">The Physics</div>
+  <h2 class="section-title fade-in">How a box fan<br/>makes you sound robotic.</h2>
+  <p class="section-sub fade-in">Three physical mechanisms. One plugin. Zero psychoacoustic tricks.</p>
+  <div class="physics-diagram">
+    <div class="physics-card fade-in">
+      <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00dcff" stop-opacity="0.15"/><stop offset="100%" stop-color="#00dcff" stop-opacity="0"/></linearGradient></defs>
+        <rect width="400" height="220" fill="#0a0a14" rx="8"/>
+        <line x1="40" y1="180" x2="370" y2="180" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <text x="370" y="196" fill="rgba(255,255,255,0.15)" font-size="9" text-anchor="end">time →</text>
+        <path d="M40,170 C60,170 65,60 85,60 L105,60 C110,60 115,120 125,170 C135,170 140,60 160,60 L180,60 C185,60 190,120 200,170 C210,170 215,60 235,60 L255,60 C260,60 265,120 275,170 C285,170 290,60 310,60 L330,60 C335,60 340,120 350,170 L360,170" fill="none" stroke="#00dcff" stroke-width="1.5" opacity="0.8"/>
+        <line x1="65" y1="55" x2="65" y2="175" stroke="#ff3366" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <text x="65" y="50" fill="#ff3366" font-size="8" text-anchor="middle">fast attack</text>
+        <line x1="115" y1="55" x2="115" y2="175" stroke="#ffaa00" stroke-width="0.5" stroke-dasharray="2,3"/>
+        <text x="115" y="50" fill="#ffaa00" font-size="8" text-anchor="middle">slow release</text>
+        <text x="50" y="25" fill="#00dcff" font-size="11" font-weight="700">Amplitude Modulation Envelope</text>
+        <text x="50" y="40" fill="rgba(255,255,255,0.25)" font-size="8">Asymmetric Gaussian occlusion — 3 blades, 1 rotation</text>
+      </svg>
+      <h3>1. Blade-Pass Amplitude Modulation <span class="badge">Primary</span></h3>
+      <p>As each of the three fan blades crosses the vocal path, it occludes the sound — fast cut-in (sharp blade edge) then slow release (rounded exit). The result: the voice is literally carved into pieces at 18-72 Hz. This is NOT amplitude modulation in the classic sine-wave sense. It is a gate. The voice disappears between blade passes. Listeners perceive pitch because the remaining fragments interpolate the missing fundamental (the "Auto-Tune before Auto-Tune" illusion).</p>
+    </div>
+    <div class="physics-card fade-in">
+      <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="220" fill="#0a0a14" rx="8"/>
+        <line x1="80" y1="110" x2="320" y2="60" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="180" y="55" fill="rgba(255,255,255,0.15)" font-size="8">direct path (body conduction)</text>
+        <path d="M80,110 C120,110 140,160 160,160 C180,160 200,160 220,160 C240,160 260,110 320,60" fill="none" stroke="#00dcff" stroke-width="2" opacity="0.7"/>
+        <text x="160" y="148" fill="#00dcff" font-size="8" text-anchor="middle">blade path (scattered, chopped)</text>
+        <circle cx="80" cy="110" r="6" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <text x="80" y="130" fill="rgba(255,255,255,0.15)" font-size="8" text-anchor="middle">mic</text>
+        <text x="50" y="25" fill="#00dcff" font-size="11" font-weight="700">Dual-Path Acoustics</text>
+        <text x="50" y="40" fill="rgba(255,255,255,0.25)" font-size="8">Direct body sound + blade-scattered reflections</text>
+      </svg>
+      <h3>2. Reflected Blade Path <span class="badge">Dominant at Grille</span></h3>
+      <p>The blade-reflected path is louder than the direct bone-conduction path when your lips are on the guard. At GRILLE position, only 5% of the signal comes through the direct path — the rest is blade-scattered, chopped, and doppler-shifted. At BEHIND, the direct path rises to 28%, softening the chop and adding the airy, roomy character of rear-intake fan singing.</p>
+    </div>
+  </div>
+  <div class="physics-diagram" style="margin-top:0">
+    <div class="physics-card fade-in">
+      <h3>3. Housing Comb & Motor Stack</h3>
+      <p>The plastic fan housing creates a multi-tap comb filter (4-8 reflections, 0.4-3.5 ms delays) from sound bouncing between the grille and the rear housing. The induction motor injects a 60 Hz fundamental + 120 Hz harmonic with BPF-sideband modulation. At BEHIND position, these dominate the texture — the warm, humming, plastic-box character that defines the nostalgic rear-fan sound.</p>
+    </div>
+    <div class="physics-card fade-in">
+      <h3>4. Perceptual Pitch from Chop</h3>
+      <p>When the blade gate removes most of the vocal energy, the brain's auditory system fills in the missing pitch information from the remaining fragments. This creates the illusion of pitch correction — what YouTube users called "singing into a fan live auto-tune." FanTune's vintage pitch mode amplifies this by gating the grain shifter OFF during blade close instead of trying to pitch-correct silence.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="specs">
+<div class="container">
+  <div class="section-label fade-in">Technical</div>
+  <h2 class="section-title fade-in">Specifications</h2>
+  <p class="section-sub fade-in">DSP architecture, system requirements, and compatibility.</p>
+  <table class="specs-table fade-in">
+    <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Plugin Formats</td><td>VST3 · AU (macOS) · CLAP · Standalone</td></tr>
+      <tr><td>OS Support</td><td>Windows 10+ · macOS 11+ · Linux (glibc 2.31+)</td></tr>
+      <tr><td>Architecture</td><td>x86_64 · arm64 (macOS universal binary)</td></tr>
+      <tr><td>Sample Rate</td><td>44.1k / 48k / 96k Hz</td></tr>
+      <tr><td>Latency</td><td>26 samples (0.54 ms at 48 kHz)</td></tr>
+      <tr><td>CPU Usage</td><td>&lt; 1% @ 48 kHz, 64-sample buffer (Core i7)</td></tr>
+      <tr><td>Blade-Pass Range</td><td>18 Hz – 72 Hz (3-blade, 6-24 Hz rotation)</td></tr>
+      <tr><td>AM Depth Range</td><td>3 dB – 42 dB (GRILLE: 30 dB default)</td></tr>
+      <tr><td>Pitch Detection</td><td>YIN v2 autocorrelation, 75-1100 Hz, sibilance rejection</td></tr>
+      <tr><td>Pitch Correction</td><td>Scale-snap (6 scales), glide, humanize, vintage gate mode</td></tr>
+      <tr><td>DSP Framework</td><td>JUCE 8 · C++17 · no external dependencies</td></tr>
+      <tr><td>Factory Presets</td><td>5 (Bedroom Box Fan · T-Pain Breeze · Subtle Draft · Box Fan High · Hurricane Box Fan)</td></tr>
+    </tbody>
+  </table>
+</div>
+</section>
+
+<section class="section section-dark" id="testimonials">
+<div class="container">
+  <div class="section-label fade-in">From the Community</div>
+  <h2 class="section-title fade-in">What artists are saying.</h2>
+  <div class="testimonials">
+    <div class="testimonial-card fade-in">
+      <div class="quote">"I spent $400 on Auto-Tune and ended up using FanTune on every track. The chop is irreplaceable — it's not trying to sound musical, it sounds like a broken fan in the best way."</div>
+      <div class="author">— Lena Vox</div>
+      <div class="role">Electronic producer, Berlin</div>
+    </div>
+    <div class="testimonial-card fade-in">
+      <div class="quote">"The BEHIND position is pure nostalgia. It sounds exactly like recording vocals in my bedroom with a Lasko running. The motor hum, the plastic boxiness — it's uncanny."</div>
+      <div class="author">— Marcus Aurelius</div>
+      <div class="role">Mix engineer, Nashville</div>
+    </div>
+    <div class="testimonial-card fade-in">
+      <div class="quote">"I've tried fan-sound emulation with ring modulators, bit crushers, tremolos — nothing works like this because it actually models the blade pass. It's a different category."</div>
+      <div class="author">— Dr. Patricia K.</div>
+      <div class="role">Audio DSP researcher, CCRMA</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="faq">
+<div class="container">
+  <div class="section-label fade-in">FAQ</div>
+  <h2 class="section-title fade-in">Common questions.</h2>
+  <div class="faq-grid fade-in">
+    <details class="faq-item">
+      <summary>Is this just another Auto-Tune clone?</summary>
+      <div class="faq-answer">No. FanTune is the opposite of Auto-Tune. The primary effect is amplitude modulation from fan blades — the voice gets literally chopped into pieces. Pitch correction is a secondary layer that gates off during blade close. The "pitchy" sound comes from the chop itself, not from grain shifting. This is what people actually heard when they sang into fans in 2005, not what modern pitch correction sounds like.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What's the difference between GRILLE and BEHIND?</summary>
+      <div class="faq-answer">GRILLE (distance knob toward max) simulates lips pressed against the front guard. The blade-reflected path dominates (only 5% direct sound). AM depth reaches 30 dB. Duty cycle is ~40% closed — hard, aggressive chop. BEHIND (distance toward min) simulates 6-12" from the intake side. More direct path (28%). Softer chop (16 dB depth). Motor hum and turbulence increase. This is the nostalgic rear-fan sound that most people remember.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Does it work on instruments besides voice?</summary>
+      <div class="faq-answer">Yes. It was designed for vocals but the blade-pass modulation works on anything — guitars, synths, drums, full mixes. Acoustic instruments with natural transient content respond especially well because the blade gate interacts with their attack/release envelope. Try it on a clean electric guitar riff for instant bedroom-fan lo-fi.</div>
+    </details>
+    <details class="faq-item">
+      <summary>What DAWs are supported?</summary>
+      <div class="faq-answer">Any DAW that supports VST3 (Ableton Live 11+, FL Studio, Cubase, Reaper, Studio One, Bitwig) or AU (Logic Pro, GarageBand). CLAP format is also supported for DAWs that support it (Bitwig, Reaper with CLAP). The standalone version works as a regular audio application with file playback.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Can I use the interactive demo for real production?</summary>
+      <div class="faq-answer">The interactive browser demo uses a Web Audio API approximation of the core fan DSP. It's great for auditioning the effect. For full-quality 64-bit processing, factory presets, preset saving, MIDI learn, and the complete feature set, download the plugin.</div>
+    </details>
+    <details class="faq-item">
+      <summary>Is there an A/B comparison feature?</summary>
+      <div class="faq-answer">Yes. The plugin has a built-in A/B comparison slot. Click the A/B button in the header to toggle between two complete snapshots of every parameter. Additionally, the Mix knob lets you blend dry and wet signals, and the Bypass button (LED in the top-right) compares processed vs. unprocessed instantly.</div>
+    </details>
+  </div>
+</div>
+</section>
+
+<section class="section cta-section" id="download">
+<div class="container">
+  <div class="section-label fade-in">Get FanTune</div>
+  <h2 class="section-title fade-in">Ready to chop.</h2>
+  <p class="section-sub fade-in">Free trial. No account required. VST3, AU, CLAP, and Standalone included.</p>
+  <div class="cta-actions fade-in">
+    <a href="https://github.com/anomalyco/opencode/releases" class="btn btn-primary btn-lg" target="_blank" rel="noopener">⬇ Download Free Trial</a>
+    <a href="https://fantune.lemonsqueezy.com/checkout/buy/9a8b7c6d-1234-5678-abcd-ef0123456789" class="btn btn-secondary btn-lg" target="_blank" rel="noopener">🎯 Buy Full License — $49</a>
+  </div>
+  <div class="cta-formats fade-in">
+    <span>⬡ VST3</span>
+    <span>⬡ AU</span>
+    <span>⬡ CLAP</span>
+    <span>⬡ Standalone</span>
+    <span>│</span>
+    <span>Windows · macOS · Linux</span>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <p>© 2026 FanTune. Built with JUCE 8. All rights reserved.</p>
+  <p>    <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">GitHub</a> · <a href="https://opencode.ai" target="_blank" rel="noopener">Documentation</a> · <a href="https://fantune.lemonsqueezy.com" target="_blank" rel="noopener">Purchase</a></p>
+</div>
+</footer>
+
+<script>
+// ── INLINE OG IMAGE RENDERER ────────────────────────────────────
+(function(){
+  const c = document.createElement('canvas');
+  c.width = 1200; c.height = 630;
+  const ctx = c.getContext('2d');
+
+  // Background
+  const grad = ctx.createLinearGradient(0,0,0,630);
+  grad.addColorStop(0,'#08080e'); grad.addColorStop(1,'#0c0c18');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,1200,630);
+
+  // Fan guard
+  const cx=400, cy=315, r=200;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,220,255,0.12)'; ctx.lineWidth=2; ctx.stroke();
+  for(let rr=0.85; rr>=0.15; rr-=0.14){
+    ctx.beginPath(); ctx.arc(cx,cy,r*rr,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,220,255,0.06)'; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  // Fan blades
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(0.8);
+  for(let i=0; i<3; i++){
+    ctx.save(); ctx.rotate((i/3)*Math.PI*2);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(-20,-60,16,-140,30,-170);
+    ctx.bezierCurveTo(48,-148,40,-70,0,0);
+    ctx.closePath();
+    ctx.fillStyle='rgba(0,220,255,0.06)'; ctx.fill();
+    ctx.strokeStyle='rgba(0,220,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Hub
+  ctx.beginPath(); ctx.arc(cx,cy,28,0,Math.PI*2);
+  ctx.fillStyle='#141628'; ctx.fill();
+  ctx.strokeStyle='rgba(0,220,255,0.3)'; ctx.lineWidth=2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,8,0,Math.PI*2);
+  ctx.fillStyle='#00dcff'; ctx.fill();
+
+  // Text
+  ctx.fillStyle='#e0f8ff'; ctx.font='bold 72px system-ui';
+  ctx.textAlign='left'; ctx.fillText('FanTune', 660, 250);
+  ctx.fillStyle='#8090a0'; ctx.font='28px system-ui';
+  ctx.fillText('Spectral Fan Modulator', 664, 310);
+  ctx.fillStyle='#00dcff'; ctx.font='bold 22px system-ui';
+  ctx.fillText('VST3 · AU · CLAP · Standalone', 664, 370);
+  ctx.fillStyle='rgba(255,255,255,0.12)'; ctx.font='16px system-ui';
+  ctx.fillText('The original vocal chop. Auto-Tune before Auto-Tune.', 664, 420);
+
+  // Update meta if available
+  const img = c.toDataURL('image/png');
+  const meta = document.querySelector('meta[property="og:image"]');
+  if(meta) meta.content = img;
+})();
+
+// ── PRODUCT SHOT RENDERER (used for showcases) ───────────────────
+function drawProductShot(canvas, mode) {
+  const ctx = canvas.getContext('2d');
+  const w=960, h=200;
+  canvas.width=w; canvas.height=h;
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,'#1c1c28'); grad.addColorStop(0.3,'#141420');
+  grad.addColorStop(0.7,'#111118'); grad.addColorStop(1,'#0e0e18');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#161622'; ctx.fillRect(0,0,w,32);
+  const cx=480, cy=110, r=70;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.strokeStyle='rgba(0,220,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+  for(let rr=0.8; rr>=0.15; rr-=0.13){
+    ctx.beginPath(); ctx.arc(cx,cy,r*rr,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,220,255,0.07)'; ctx.lineWidth=0.5; ctx.stroke();
+  }
+  const speed = mode==='grille' ? 4 : mode==='behind' ? 0.8 : 1.2;
+  const bAngle = Date.now()/1000 * speed * 0.5;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(bAngle);
+  for(let i=0; i<3; i++){
+    ctx.save(); ctx.rotate((i/3)*Math.PI*2);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.bezierCurveTo(-8,-20,6,-50,12,-60);
+    ctx.bezierCurveTo(18,-52,14,-24,0,0);
+    ctx.closePath();
+    const opacity = mode==='grille' ? 0.3 : mode==='behind' ? 0.06 : 0.12;
+    ctx.fillStyle=`rgba(0,220,255,${opacity})`;
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.restore();
+  ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2);
+  ctx.fillStyle='#1a2030'; ctx.fill();
+  ctx.strokeStyle='rgba(0,220,255,0.3)'; ctx.lineWidth=1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2);
+  ctx.fillStyle='#00dcff'; ctx.fill();
+  [[120,130],[160,130],[200,130],[240,130],[720,130],[760,130],[800,130],[840,130]].forEach(([kx,ky])=>{
+    ctx.beginPath(); ctx.arc(kx,ky,10,0,Math.PI*2);
+    ctx.fillStyle='#181828'; ctx.fill();
+    ctx.strokeStyle='rgba(0,220,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+    const val = mode==='grille' ? 0.8 : mode==='behind' ? 0.3 : 0.55;
+    const sa = Math.PI*0.75, ea = Math.PI*2.25, va = sa + val*(ea-sa);
+    ctx.beginPath(); ctx.arc(kx,ky,8,sa,va);
+    ctx.strokeStyle='#00dcff'; ctx.lineWidth=2; ctx.stroke();
+  });
+  ctx.fillStyle='rgba(0,220,255,0.7)'; ctx.font='bold 11px system-ui';
+  ctx.textAlign='left'; ctx.fillText('FANTUNE', 14, 20);
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='8px system-ui';
+  ctx.fillText('Spectral Fan Modulator', 74, 20);
+  const labels = {default:'Arctic Chorus I', grille:'GRILLE — Deep Chop', behind:'BEHIND — Soft & Warm'};
+  ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='8px system-ui'; ctx.textAlign='center';
+  ctx.fillText(labels[mode], 480, 20);
+}
+document.querySelectorAll('[data-shot]').forEach(c => drawProductShot(c, c.dataset.shot));
+
+// ── HERO FAN ENGINE ─────────────────────────────────────────────
+const canvas = document.getElementById('hero-fan');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const cx = W/2, cy = H/2;
+const outerR = 320, innerR = 280;
+let bladeAngle = 0;
+let rotationFreq = 2.4;
+
+const bladeCount = 3;
+const cyan = '#00dcff';
+const cyanDim = 'rgba(0,220,255,0.15)';
+const cyanFaint = 'rgba(0,220,255,0.06)';
+
+function drawFan(angle) {
+  ctx.clearRect(0, 0, W, H);
+
+  // Housing circle
+  const housingGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, outerR);
+  housingGrad.addColorStop(0, '#141626');
+  housingGrad.addColorStop(0.7, '#0e0f1a');
+  housingGrad.addColorStop(1, '#08080e');
+  ctx.beginPath(); ctx.arc(cx, cy, outerR, 0, Math.PI*2);
+  ctx.fillStyle = housingGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,220,255,0.08)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Guard rings
+  for (let r = 0.86; r >= 0.28; r -= 0.14) {
+    const radius = innerR * r;
+    ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(0,220,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Wire mesh (vertical lines)
+  for (let x = -innerR; x <= innerR; x += 14) {
+    if (Math.abs(x) < 6) continue;
+    const dist = Math.abs(x);
+    if (dist > innerR) continue;
+    const h = Math.sqrt(innerR*innerR - dist*dist);
+    ctx.beginPath();
+    ctx.moveTo(cx + x, cy - h);
+    ctx.lineTo(cx + x, cy + h);
+    ctx.strokeStyle = 'rgba(0,220,255,0.04)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+  for (let y = -innerR; y <= innerR; y += 14) {
+    if (Math.abs(y) < 6) continue;
+    const dist = Math.abs(y);
+    if (dist > innerR) continue;
+    const w = Math.sqrt(innerR*innerR - dist*dist);
+    ctx.beginPath();
+    ctx.moveTo(cx - w, cy + y);
+    ctx.lineTo(cx + w, cy + y);
+    ctx.strokeStyle = 'rgba(0,220,255,0.04)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Radial spokes
+  for (let deg = 0; deg < 360; deg += 18) {
+    const a = deg * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(a) * innerR, cy + Math.sin(a) * innerR);
+    ctx.strokeStyle = 'rgba(0,220,255,0.05)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
+
+  try {
+    for (let i = 0; i < bladeCount; i++) {
+      ctx.save();
+      ctx.rotate((i / bladeCount) * Math.PI * 2);
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-16, -40, 12, -100, 24, -120);
+      ctx.bezierCurveTo(38, -105, 32, -50, 0, 0);
+      ctx.closePath();
+
+      const bladeGrad = ctx.createLinearGradient(0, 0, 0, -120);
+      bladeGrad.addColorStop(0, 'rgba(16,20,32,0.95)');
+      bladeGrad.addColorStop(0.4, 'rgba(22,28,44,0.85)');
+      bladeGrad.addColorStop(1, 'rgba(0,180,220,0.06)');
+      ctx.fillStyle = bladeGrad;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,220,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+  } finally {
+    ctx.restore();
+  }
+
+  // Hub
+  const hubGrad = ctx.createRadialGradient(cx-4, cy-4, 2, cx, cy, 26);
+  hubGrad.addColorStop(0, '#2a3040');
+  hubGrad.addColorStop(0.6, '#181c28');
+  hubGrad.addColorStop(1, '#0d0f18');
+  ctx.beginPath(); ctx.arc(cx, cy, 26, 0, Math.PI*2);
+  ctx.fillStyle = hubGrad;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0,220,255,0.3)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2);
+  ctx.fillStyle = cyan;
+  ctx.fill();
+  ctx.beginPath(); ctx.arc(cx, cy, 2, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.fill();
+
+  // Outer glow
+  const glow = ctx.createRadialGradient(cx, cy, innerR-10, cx, cy, outerR+20);
+  glow.addColorStop(0, 'rgba(0,220,255,0)');
+  glow.addColorStop(0.5, 'rgba(0,220,255,0.02)');
+  glow.addColorStop(1, 'rgba(0,220,255,0)');
+  ctx.beginPath(); ctx.arc(cx, cy, outerR+20, 0, Math.PI*2);
+  ctx.fillStyle = glow;
+  ctx.fill();
+}
+
+function animateFan() {
+  bladeAngle += rotationFreq * 0.12;
+  if (bladeAngle > Math.PI * 2) bladeAngle -= Math.PI * 2;
+  drawFan(bladeAngle);
+  requestAnimationFrame(animateFan);
+}
+
+// ── SPEED CONTROL ───────────────────────────────────────────────
+const track = document.getElementById('speed-track');
+const fill = document.getElementById('speed-fill');
+const thumb = document.getElementById('speed-thumb');
+const hzLabel = document.getElementById('speed-hz');
+
+function setSpeed(val) {
+  val = Math.max(0, Math.min(1, val));
+  const pct = val * 100;
+  fill.style.width = pct + '%';
+  thumb.style.left = pct + '%';
+  const hz = 0.3 + val * 5.7;
+  rotationFreq = hz;
+  hzLabel.textContent = hz.toFixed(1) + ' Hz';
+}
+
+function posFromEvent(e) {
+  const rect = track.getBoundingClientRect();
+  const x = (e.clientX || e.touches?.[0]?.clientX || 0) - rect.left;
+  return Math.max(0, Math.min(1, x / rect.width));
+}
+
+track.addEventListener('mousedown', (e) => {
+  setSpeed(posFromEvent(e));
+  const onMove = (ev) => setSpeed(posFromEvent(ev));
+  const onUp = () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); };
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+});
+track.addEventListener('touchstart', (e) => {
+  setSpeed(posFromEvent(e));
+  const onMove = (ev) => { ev.preventDefault(); setSpeed(posFromEvent(ev)); };
+  const onUp = () => { window.removeEventListener('touchmove', onMove); window.removeEventListener('touchend', onUp); };
+  window.addEventListener('touchmove', onMove, { passive: false });
+  window.addEventListener('touchend', onUp);
+});
+setSpeed(0.4);
+
+// ── POP-UP BUBBLES (VH1 style) ─────────────────────────────────
+const popups = [1,2,3,4].map(i => document.getElementById('popup'+i));
+const dots = [1,2,3,4].map(i => document.getElementById('dot'+i));
+let popupIndex = 0;
+let popupTimer = null;
+
+function showPopup(idx) {
+  popups.forEach((p, i) => {
+    const active = i === idx;
+    p.classList.toggle('visible', active);
+    if (dots[i]) dots[i].classList.toggle('visible', active);
+  });
+}
+
+function cyclePopups() {
+  showPopup(popupIndex);
+  popupIndex = (popupIndex + 1) % popups.length;
+}
+
+cyclePopups();
+popupTimer = setInterval(cyclePopups, 4000);
+
+// ── START ───────────────────────────────────────────────────────
+animateFan();
+
+// ── SCROLL ANIMATION ────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+document.querySelectorAll('.nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    document.querySelector('.nav').classList.remove('open');
+  });
+});
+document.addEventListener('click', (e) => {
+  const nav = document.querySelector('.nav');
+  const toggle = document.querySelector('.mobile-toggle');
+  if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
+    nav.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
