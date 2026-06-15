@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Time Stretch X — Real-Time Granular Time-Stretch VST3 Plugin | Bend Time, Not Pitch</title>
+<meta name="description" content="Time Stretch X: next-gen real-time granular time-stretching VST3 plugin with 4 algorithms — Granular, Spectral, Beat-Sync, Tape. Independent time/pitch control."/>
+<meta name="keywords" content="time stretch VST, granular time stretching, phase vocoder, beat sync, varispeed, audio time stretch plugin"/>
+<meta name="robots" content="index, follow"/>
+<meta name="theme-color" content="#06b6d4"/>
+<link rel="canonical" href="https://myaiplug.github.io/fantune-skin/time-stretch-x/"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M4 6 L28 6 L22 16 L28 26 L4 26 L10 16 Z' fill='%2306b6d4'/><line x1='16' y1='6' x2='16' y2='26' stroke='%230a0a0f' stroke-width='2'/></svg>"/>
+<meta property="og:title" content="Time Stretch X — Granular Time-Stretch VST3"/>
+<meta property="og:description" content="4 algorithms. Independent time/pitch. Zero-latency monitoring."/>
+<meta property="og:url" content="https://myaiplug.github.io/fantune-skin/time-stretch-x/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Time Stretch X","applicationCategory":"Multimedia","operatingSystem":"Windows 10+, macOS 11+, Linux","description":"Real-time granular time-stretching VST3 plugin with 4 algorithms: Granular, Spectral, Beat-Sync, Tape.","url":"https://myaiplug.github.io/fantune-skin/time-stretch-x/","softwareVersion":"1.5.0","offers":{"@type":"Offer","price":"59.00","priceCurrency":"USD","availability":"https://schema.org/InStock"}}</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#08080e;color:#c8d0e0;overflow-x:hidden;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-dark{background:#0a0a14}
+.section-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#06b6d4;margin-bottom:8px;font-weight:600}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:800;color:#e0f0ff;margin-bottom:16px;line-height:1.15}
+.section-sub{font-size:clamp(15px,1.5vw,18px);color:#7080a0;max-width:680px;line-height:1.7}
+.center{text-align:center}.center .section-sub{margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;box-shadow:0 4px 30px rgba(6,182,212,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(6,182,212,0.45)}
+.btn-secondary{background:rgba(6,182,212,0.06);color:#06b6d4;border:1px solid rgba(6,182,212,0.2)}
+.btn-secondary:hover{background:rgba(6,182,212,0.12);border-color:rgba(6,182,212,0.4)}
+.btn-lg{padding:18px 42px;font-size:16px}
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,14,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(6,182,212,0.06);height:64px;display:flex;align-items:center}
+header .container{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{display:flex;align-items:center;gap:10px;color:#e0f0ff;font-weight:700;font-size:16px;letter-spacing:0.04em;text-decoration:none}
+.logo span{color:rgba(6,182,212,0.7)}
+.nav{display:flex;align-items:center;gap:24px;list-style:none}
+.nav a{color:#7080a0;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s}
+.nav a:hover{color:#06b6d4}
+.nav .btn{padding:8px 18px;font-size:12px}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;top:-20%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 50%, rgba(6,182,212,0.03) 0%, transparent 60%),radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.02) 0%, transparent 50%)}
+.hero .container{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:60px;align-items:center;padding-top:40px}
+.hero h1{font-size:clamp(36px,5vw,60px);font-weight:900;line-height:1.08;color:#f0faff;margin-bottom:20px;letter-spacing:-0.02em}
+.hero h1 .grad{background:linear-gradient(135deg,#06b6d4,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:clamp(16px,1.5vw,19px);color:#7080a0;max-width:520px;margin-bottom:32px;line-height:1.7}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:900px){.hero .container{grid-template-columns:1fr;gap:40px}.hero-right{order:-1}}
+#wave-canvas{width:100%;max-width:560px;aspect-ratio:560/180;display:block;margin:0 auto;border-radius:12px;background:#0a0a14;border:1px solid rgba(6,182,212,0.08);cursor:crosshair}
+.algo-selector{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.algo-btn{padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#7080a0;font-size:11px;cursor:pointer;transition:all 0.2s;font-weight:600;letter-spacing:0.05em;text-transform:uppercase}
+.algo-btn:hover{border-color:rgba(6,182,212,0.3);color:#06b6d4}
+.algo-btn.active{background:rgba(6,182,212,0.12);border-color:#06b6d4;color:#06b6d4}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
+.feature-card{padding:32px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(6,182,212,0.04);transition:all 0.3s}
+.feature-card:hover{border-color:rgba(6,182,212,0.12);transform:translateY(-3px)}
+.feature-card h3{font-size:16px;font-weight:700;color:#e0f0ff;margin-bottom:8px}
+.feature-card p{font-size:13px;color:#6070a0;line-height:1.7}
+.feature-card .icon{font-size:24px;margin-bottom:12px;display:block}
+.algo-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-top:8px}
+.stretch-demo{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.stretch-demo label{font-size:12px;color:#6070a0}
+.stretch-demo input[type=range]{width:140px;accent-color:#06b6d4}
+.stretch-demo .val{font-size:14px;font-weight:700;color:#06b6d4;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
+.spec-card{padding:24px;border-radius:10px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(6,182,212,0.04);text-align:center}
+.spec-card .num{font-size:28px;font-weight:800;color:#06b6d4}
+.spec-card .desc{font-size:12px;color:#6070a0;margin-top:4px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;align-items:start}
+.pricing-card{padding:36px 28px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(6,182,212,0.04);text-align:center;transition:all 0.3s;position:relative}
+.pricing-card.featured{border-color:#06b6d4;box-shadow:0 0 40px rgba(6,182,212,0.08)}
+.pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#06b6d4;color:#fff;font-size:10px;padding:4px 16px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.pricing-card:hover{border-color:rgba(6,182,212,0.2);transform:translateY(-4px)}
+.pricing-card h3{font-size:18px;font-weight:700;color:#e0f0ff}
+.pricing-card .price{font-size:36px;font-weight:900;color:#fff;margin:12px 0 4px}
+.pricing-card .price-sub{font-size:13px;color:#6070a0;margin-bottom:16px}
+.pricing-card ul{list-style:none;text-align:left;margin:16px 0;font-size:13px;color:#8090b0}
+.pricing-card ul li{padding:7px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.pricing-card ul li::before{content:'✓';color:#06b6d4;font-weight:700}
+.pricing-card .btn{width:100%;justify-content:center}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:48px auto 0}}
+.cta-section{text-align:center;background:linear-gradient(180deg,transparent,rgba(6,182,212,0.02),transparent);border-top:1px solid rgba(6,182,212,0.04);border-bottom:1px solid rgba(6,182,212,0.04)}
+.cta-section h2{font-size:clamp(30px,4vw,44px)}.cta-section .section-sub{margin:16px auto 36px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+footer{background:#06060c;border-top:1px solid rgba(6,182,212,0.04);padding:40px 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:12px;color:#405070}
+footer a{color:#06b6d4;text-decoration:none;font-size:12px}
+footer a:hover{text-decoration:underline}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">Time Stretch <span>X</span></a>
+  <ul class="nav">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#algorithms">Algorithms</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#pricing" class="btn btn-primary">Buy $59</a></li>
+  </ul>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="container">
+  <div>
+    <div class="section-label" style="margin-bottom:16px">⚡ v1.5 — Granular Engine</div>
+    <h1>Bend time.<br/><span class="grad">Not pitch.</span></h1>
+    <p>Next-generation real-time granular time-stretching with 4 algorithms. Independent time and pitch control. Zero-latency monitoring. From transparent spectral stretching to lo-fi tape warp.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-primary btn-lg">▶ Try Interactive Demo</a>
+      <a href="#pricing" class="btn btn-secondary btn-lg">Buy $59</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <canvas id="wave-canvas" width="560" height="180"></canvas>
+    <div class="algo-selector">
+      <span class="algo-btn active" data-algo="granular">Granular</span>
+      <span class="algo-btn" data-algo="spectral">Spectral</span>
+      <span class="algo-btn" data-algo="beatsync">Beat-Sync</span>
+      <span class="algo-btn" data-algo="tape">Tape</span>
+    </div>
+    <div class="stretch-demo">
+      <label>Stretch</label>
+      <input type="range" id="stretch-slider" min="0.25" max="4" step="0.01" value="1.0"/>
+      <span class="val" id="stretch-val">1.00x</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="algorithms">
+<div class="container center">
+  <div class="section-label fade-in">Algorithms</div>
+  <h2 class="section-title fade-in">Four ways to shape time.</h2>
+  <p class="section-sub fade-in">Each algorithm has its own character. Choose the right tool for your material.</p>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <span class="icon">🧊</span>
+      <h3>Granular</h3>
+      <p>Real-time grain synthesis with continuous control over grain size, density, shape, jitter, and envelope. Overlapping grain clouds for lush, evolving textures. Best for creative sound design and extreme stretching up to 8x.</p>
+      <span class="algo-badge" style="background:rgba(6,182,212,0.12);color:#06b6d4">Creative</span>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">📡</span>
+      <h3>Spectral</h3>
+      <p>Phase vocoder with FFT-based processing. Superior sound quality for melodic material and vocals. Configurable FFT size (1024–8192) and window overlap. Transparent stretching up to 4x with zero audible artifacts.</p>
+      <span class="algo-badge" style="background:rgba(168,85,247,0.12);color:#a855f7">Transparent</span>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🥁</span>
+      <h3>Beat-Sync</h3>
+      <p>Transient-aware time stretching that preserves rhythmic integrity. Real-time transient detection and preservation. Lock stretch ratio to host BPM for tempo-synced loops. Perfect for drums, percussion, and rhythmic material.</p>
+      <span class="algo-badge" style="background:rgba(34,197,94,0.12);color:#22c55e">Rhythmic</span>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">📼</span>
+      <h3>Tape</h3>
+      <p>Varispeed analog-modeled stretching with wow, flutter, tape saturation, and stop/start transients. From subtle tape warm-up to extreme pitch bends and lo-fi warp. Includes modeled reel inertia and playback speed curves.</p>
+      <span class="algo-badge" style="background:rgba(234,179,8,0.12);color:#eab308">Character</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="demo">
+<div class="container center">
+  <div class="section-label fade-in">Interactive</div>
+  <h2 class="section-title fade-in">Stretch audio in real time.</h2>
+  <p class="section-sub fade-in">Click the waveform to regenerate. Drag the slider to stretch. Switch algorithms to compare.</p>
+</div>
+</section>
+
+<section class="section section-dark" id="specs">
+<div class="container center">
+  <div class="section-label fade-in">Specs</div>
+  <h2 class="section-title fade-in">Built for speed.</h2>
+  <div class="specs-grid fade-in">
+    <div class="spec-card"><div class="num">4</div><div class="desc">Time-stretch algorithms</div></div>
+    <div class="spec-card"><div class="num">0.5 ms</div><div class="desc">Zero-latency monitoring</div></div>
+    <div class="spec-card"><div class="num">0.25x–8x</div><div class="desc">Stretch ratio range</div></div>
+    <div class="spec-card"><div class="num">3</div><div class="desc">Plugin formats</div></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="pricing">
+<div class="container center">
+  <div class="section-label fade-in">Pricing</div>
+  <h2 class="section-title fade-in">Own time.</h2>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-in">
+      <h3>Essentials</h3>
+      <div class="price">$29</div>
+      <div class="price-sub">Single algorithm</div>
+      <ul>
+        <li>1 algorithm of your choice</li>
+        <li>Time/pitch independent</li>
+        <li>VST3 / AU</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/tx-essentials" class="btn btn-secondary">Choose</a>
+    </div>
+    <div class="pricing-card featured fade-in">
+      <h3>Pro</h3>
+      <div class="price">$59</div>
+      <div class="price-sub">All 4 algorithms</div>
+      <ul>
+        <li>All 4 time-stretch algorithms</li>
+        <li>Independent time & pitch</li>
+        <li>Interactive waveform display</li>
+        <li>Preset morphing</li>
+        <li>VST3 / AU / AAX</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/tx-pro" class="btn btn-primary">Buy Now</a>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Studio Bundle</h3>
+      <div class="price">$249</div>
+      <div class="price-sub">All NoDAW plugins</div>
+      <ul>
+        <li>Time Stretch X Pro</li>
+        <li>NoDAW Racks Standard</li>
+        <li>Repair-IT Pro</li>
+        <li>Chronos Weaver</li>
+        <li>All future updates</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/nodaw-bundle" class="btn btn-secondary">Get Bundle</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section cta-section" id="download">
+<div class="container center">
+  <div class="section-label fade-in">Try It</div>
+  <h2 class="section-title fade-in">Bend time right now.</h2>
+  <p class="section-sub fade-in">Free 14-day trial. No credit card. Full algorithms, no limitations.</p>
+  <div class="cta-actions fade-in">
+    <a href="#demo" class="btn btn-primary btn-lg">▶ Try Interactive Demo</a>
+    <a href="https://github.com/myaiplug/fantune-skin/releases" class="btn btn-secondary btn-lg">⬇ Download Free Trial</a>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <p>© 2026 NoDAW. Part of the <a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> ecosystem.</p>
+  <p><a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> · <a href="https://myaiplug.github.io/fantune-skin/nodaw-racks/">NoDAW Racks</a> · <a href="https://myaiplug.github.io/fantune-skin/repair-it/">Repair-IT</a> · <a href="https://myaiplug.github.io/fantune-skin/chronos-weaver/">Chronos Weaver</a></p>
+</div>
+</footer>
+
+<script>
+// ── WAVEFORM CANVAS ─────────────────────────────────────────────
+const wc = document.getElementById('wave-canvas');
+const wctx = wc.getContext('2d');
+const wW=560, wH=180;
+let currentAlgo = 'granular';
+let stretchVal = 1.0;
+let waveData = [];
+
+function generateWave(algo, stretch) {
+  const len = 256;
+  waveData = new Float32Array(len);
+  for(let i=0; i<len; i++) {
+    const t = i/len;
+    let v = 0;
+    switch(algo) {
+      case 'granular':
+        v = Math.sin(2*Math.PI*5*t) * 0.4 + Math.sin(2*Math.PI*11*t)*0.3 + Math.sin(2*Math.PI*23*t)*0.2;
+        // grains
+        for(let g=0; g<5; g++) {
+          const gp = (t*stretch + g/5) % 1;
+          const ge = Math.max(0, 1 - Math.abs(gp-0.5)*4);
+          v += ge * (Math.random()-0.5) * 0.3;
+        }
+        break;
+      case 'spectral':
+        v = Math.sin(2*Math.PI*3*t/stretch) * 0.5 + Math.sin(2*Math.PI*7*t/stretch)*0.3 + Math.sin(2*Math.PI*13*t/stretch)*0.15;
+        break;
+      case 'beatsync':
+        const beat = Math.sin(2*Math.PI*2*t/stretch);
+        const trans = Math.max(0, Math.sin(2*Math.PI*8*t/stretch))**4;
+        v = beat*0.4 + trans*0.4 + (Math.random()-0.5)*0.05;
+        break;
+      case 'tape':
+        const wow = Math.sin(2*Math.PI*0.3*t)*0.05;
+        const flutter = Math.sin(2*Math.PI*4*t)*0.02;
+        const freq = 4 * (1 + wow + flutter);
+        v = Math.sin(2*Math.PI*freq*t/stretch) * 0.5;
+        // saturation
+        v = Math.tanh(v*1.5)/1.5;
+        break;
+    }
+    waveData[i] = Math.max(-1, Math.min(1, v));
+  }
+}
+
+function drawWave() {
+  wctx.clearRect(0,0,wW,wH);
+  wctx.fillStyle='#0a0a14'; wctx.fillRect(0,0,wW,wH);
+
+  // grid
+  wctx.strokeStyle='rgba(255,255,255,0.04)'; wctx.lineWidth=0.5;
+  for(let x=0; x<wW; x+=28) { wctx.beginPath(); wctx.moveTo(x,0); wctx.lineTo(x,wH); wctx.stroke(); }
+  wctx.beginPath(); wctx.moveTo(0,wH/2); wctx.lineTo(wW,wH/2); wctx.stroke();
+
+  if(waveData.length===0) generateWave(currentAlgo, stretchVal);
+
+  // waveform
+  const colors = {granular:'#06b6d4',spectral:'#a855f7',beatsync:'#22c55e',tape:'#eab308'};
+  const color = colors[currentAlgo]||'#06b6d4';
+
+  // fill
+  wctx.beginPath();
+  wctx.moveTo(0, wH/2);
+  for(let i=0; i<waveData.length; i++) {
+    const x = (i/waveData.length)*wW;
+    const y = wH/2 - waveData[i]*(wH/2-10);
+    wctx.lineTo(x, y);
+  }
+  wctx.lineTo(wW, wH/2);
+  wctx.closePath();
+  const grd = wctx.createLinearGradient(0,0,wW,0);
+  grd.addColorStop(0,color+'40'); grd.addColorStop(1,color+'10');
+  wctx.fillStyle=grd; wctx.fill();
+
+  // stroke
+  wctx.beginPath();
+  for(let i=0; i<waveData.length; i++) {
+    const x = (i/waveData.length)*wW;
+    const y = wH/2 - waveData[i]*(wH/2-10);
+    i===0 ? wctx.moveTo(x,y) : wctx.lineTo(x,y);
+  }
+  wctx.strokeStyle=color; wctx.lineWidth=1.5; wctx.stroke();
+
+  // grains
+  if(currentAlgo==='granular') {
+    for(let g=0; g<8; g++) {
+      const gx = ((g/8 + Date.now()/20000)*wW) % wW;
+      const gy = wH/2 + (Math.random()-0.5)*40;
+      wctx.beginPath(); wctx.arc(gx,gy,3+Math.random()*3,0,Math.PI*2);
+      wctx.fillStyle=color+'30'; wctx.fill();
+    }
+  }
+
+  // label
+  wctx.fillStyle='rgba(255,255,255,0.1)'; wctx.font='8px system-ui'; wctx.textAlign='left';
+  wctx.fillText(currentAlgo.toUpperCase() + '  |  ' + stretchVal.toFixed(2)+'x', 10, 14);
+}
+
+// algo selector
+document.querySelectorAll('.algo-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.algo-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentAlgo = btn.dataset.algo;
+    generateWave(currentAlgo, stretchVal);
+    drawWave();
+  });
+});
+
+// stretch slider
+document.getElementById('stretch-slider').addEventListener('input', (e) => {
+  stretchVal = parseFloat(e.target.value);
+  document.getElementById('stretch-val').textContent = stretchVal.toFixed(2)+'x';
+  generateWave(currentAlgo, stretchVal);
+  drawWave();
+});
+
+// click to regenerate
+wc.addEventListener('click', () => { generateWave(currentAlgo, stretchVal); drawWave(); });
+
+generateWave(currentAlgo, stretchVal);
+drawWave();
+setInterval(() => { if(currentAlgo==='granular'||currentAlgo==='tape') drawWave(); }, 200);
+
+// scroll anim
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

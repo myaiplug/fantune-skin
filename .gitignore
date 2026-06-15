@@ -17,3 +17,15 @@ Thumbs.db
 *.code-workspace
 mcps/
 terminals/
+
+# VST plugin source — only landing pages on GitHub
+CMakeLists.txt
+FanTuneLookAndFeel.h
+Source/
+libs/
+presets/
+references/
+resources/
+scripts/
+tools/
+test_vocal_input.wav

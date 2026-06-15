@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Repair-IT — Spectral Audio Repair VST3 Plugin | Noise Reduction, De-Noise, De-Clip</title>
+<meta name="description" content="Repair-IT: professional spectral audio repair VST3 plugin. Real-time noise reduction, de-clip, de-ess, and spectral restoration. Live spectrogram visualization."/>
+<meta name="keywords" content="audio repair VST, noise reduction plugin, de-noise, de-clip, spectral restoration, audio cleanup plugin"/>
+<meta name="robots" content="index, follow"/>
+<meta name="theme-color" content="#22c55e"/>
+<link rel="canonical" href="https://myaiplug.github.io/fantune-skin/repair-it/"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2322c55e' opacity='0.3'/><circle cx='16' cy='16' r='8' fill='none' stroke='%2322c55e' stroke-width='2'/><line x1='16' y1='2' x2='16' y2='8' stroke='%2322c55e' stroke-width='2'/><line x1='16' y1='24' x2='16' y2='30' stroke='%2322c55e' stroke-width='2'/></svg>"/>
+<meta property="og:title" content="Repair-IT — Spectral Audio Repair VST3"/>
+<meta property="og:description" content="De-noise, de-clip, de-ess. Live spectrogram. Spectral restoration."/>
+<meta property="og:url" content="https://myaiplug.github.io/fantune-skin/repair-it/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Repair-IT","applicationCategory":"Multimedia","operatingSystem":"Windows 10+, macOS 11+, Linux","description":"Professional spectral audio repair VST3 plugin with real-time noise reduction, de-clip, and de-ess.","url":"https://myaiplug.github.io/fantune-skin/repair-it/","softwareVersion":"1.0.0","offers":{"@type":"Offer","price":"79.00","priceCurrency":"USD","availability":"https://schema.org/InStock"}}</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#08080e;color:#c8d0e0;overflow-x:hidden;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-dark{background:#0a0a14}
+.section-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#22c55e;margin-bottom:8px;font-weight:600}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:800;color:#e0f0ff;margin-bottom:16px;line-height:1.15}
+.section-sub{font-size:clamp(15px,1.5vw,18px);color:#7080a0;max-width:680px;line-height:1.7}
+.center{text-align:center}.center .section-sub{margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 30px rgba(34,197,94,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(34,197,94,0.45)}
+.btn-secondary{background:rgba(34,197,94,0.06);color:#22c55e;border:1px solid rgba(34,197,94,0.2)}
+.btn-secondary:hover{background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.4)}
+.btn-lg{padding:18px 42px;font-size:16px}
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,14,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(34,197,94,0.06);height:64px;display:flex;align-items:center}
+header .container{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{display:flex;align-items:center;gap:10px;color:#e0f0ff;font-weight:700;font-size:16px;letter-spacing:0.04em;text-decoration:none}
+.logo span{color:rgba(34,197,94,0.7)}
+.nav{display:flex;align-items:center;gap:24px;list-style:none}
+.nav a{color:#7080a0;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s}
+.nav a:hover{color:#22c55e}
+.nav .btn{padding:8px 18px;font-size:12px}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;top:-30%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 30% 50%, rgba(34,197,94,0.03) 0%, transparent 60%),radial-gradient(ellipse at 70% 30%, rgba(59,130,246,0.02) 0%, transparent 50%)}
+.hero .container{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr 0.9fr;gap:60px;align-items:center;padding-top:40px}
+.hero h1{font-size:clamp(36px,5vw,60px);font-weight:900;line-height:1.05;color:#f0faff;margin-bottom:20px;letter-spacing:-0.02em}
+.hero h1 em{font-style:normal;color:#22c55e}
+.hero p{font-size:clamp(16px,1.5vw,19px);color:#7080a0;max-width:520px;margin-bottom:32px;line-height:1.7}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:900px){.hero .container{grid-template-columns:1fr;gap:40px}.hero-right{order:-1}}
+#spec-canvas{width:100%;max-width:520px;aspect-ratio:520/280;display:block;margin:0 auto;border-radius:12px;background:#0a0a14;border:1px solid rgba(34,197,94,0.08)}
+.toggle-group{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.toggle-btn{padding:8px 20px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#7080a0;font-size:12px;cursor:pointer;transition:all 0.2s;font-weight:600}
+.toggle-btn:hover{border-color:rgba(34,197,94,0.3);color:#22c55e}
+.toggle-btn.active{background:rgba(34,197,94,0.12);border-color:#22c55e;color:#22c55e}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
+.feature-card{padding:32px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(34,197,94,0.04);transition:all 0.3s}
+.feature-card:hover{border-color:rgba(34,197,94,0.12);transform:translateY(-3px)}
+.feature-card h3{font-size:16px;font-weight:700;color:#e0f0ff;margin-bottom:8px}
+.feature-card p{font-size:13px;color:#6070a0;line-height:1.7}
+.feature-card .icon{font-size:24px;margin-bottom:12px;display:block}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
+.spec-card{padding:24px;border-radius:10px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(34,197,94,0.04);text-align:center}
+.spec-card .num{font-size:28px;font-weight:800;color:#22c55e}
+.spec-card .desc{font-size:12px;color:#6070a0;margin-top:4px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;align-items:start}
+.pricing-card{padding:36px 28px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(34,197,94,0.04);text-align:center;transition:all 0.3s;position:relative}
+.pricing-card.featured{border-color:#22c55e;box-shadow:0 0 40px rgba(34,197,94,0.08)}
+.pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;font-size:10px;padding:4px 16px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.pricing-card:hover{border-color:rgba(34,197,94,0.2);transform:translateY(-4px)}
+.pricing-card h3{font-size:18px;font-weight:700;color:#e0f0ff}
+.pricing-card .price{font-size:36px;font-weight:900;color:#fff;margin:12px 0 4px}
+.pricing-card .price-sub{font-size:13px;color:#6070a0;margin-bottom:16px}
+.pricing-card ul{list-style:none;text-align:left;margin:16px 0;font-size:13px;color:#8090b0}
+.pricing-card ul li{padding:7px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.pricing-card ul li::before{content:'✓';color:#22c55e;font-weight:700}
+.pricing-card .btn{width:100%;justify-content:center}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:48px auto 0}}
+.cta-section{text-align:center;background:linear-gradient(180deg,transparent,rgba(34,197,94,0.02),transparent);border-top:1px solid rgba(34,197,94,0.04);border-bottom:1px solid rgba(34,197,94,0.04)}
+.cta-section h2{font-size:clamp(30px,4vw,44px)}.cta-section .section-sub{margin:16px auto 36px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+footer{background:#06060c;border-top:1px solid rgba(34,197,94,0.04);padding:40px 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:12px;color:#405070}
+footer a{color:#22c55e;text-decoration:none;font-size:12px}
+footer a:hover{text-decoration:underline}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">Repair-<span>IT</span></a>
+  <ul class="nav">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#pricing" class="btn btn-primary">Buy $79</a></li>
+  </ul>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="container">
+  <div>
+    <div class="section-label" style="margin-bottom:16px">🔊 Spectral Audio Repair VST3</div>
+    <h1>Hear the noise.<br/><em>Then erase it.</em></h1>
+    <p>Professional spectral audio repair in real time. De-noise, de-clip, de-ess, and spectral restoration — all with live spectrogram visualization. See exactly what you're removing.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-primary btn-lg">▶ Try Interactive Demo</a>
+      <a href="#pricing" class="btn btn-secondary btn-lg">Buy $79</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <canvas id="spec-canvas" width="520" height="280"></canvas>
+    <div class="toggle-group">
+      <span class="toggle-btn active" data-mode="noisy">Noisy Input</span>
+      <span class="toggle-btn" data-mode="repaired">Repaired Output</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="features">
+<div class="container center">
+  <div class="section-label fade-in">Tools</div>
+  <h2 class="section-title fade-in">Everything you need<br/>to clean audio.</h2>
+  <p class="section-sub fade-in">Six spectral tools in one plugin. Point at the noise and remove it.</p>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <span class="icon">🌊</span>
+      <h3>Spectral De-Noise</h3>
+      <p>Real-time noise profiling and adaptive spectral subtraction. Learn a noise floor and remove it across the entire frequency range. Adjustable reduction amount, floor offset, and spectral smoothing.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">⚡</span>
+      <h3>De-Clipper</h3>
+      <p>Reconstruct clipped waveforms using ML-based interpolation. Recover up to 12 dB of clipped material. Real-time with configurable reconstruction depth and transient preservation.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🔊</span>
+      <h3>De-Esser</h3>
+      <p>Split-band sibilance reduction with spectral detection. Frequency-specific (4–12 kHz) with adjustable threshold, range, and detection bandwidth. Preserves vocal body while removing harsh sibilance.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">📊</span>
+      <h3>Live Spectrogram</h3>
+      <p>Real-time FFT-based spectrogram with configurable resolution, color map, and zoom. See exactly what frequencies contain noise. Adjustable FFT size (512–8192), overlap (50–90%), and window type.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🔄</span>
+      <h3>Before / After</h3>
+      <p>Instant A/B comparison with seamless transition. Toggle between processed and unprocessed to hear exactly what changed. The spectrogram updates live to show the difference visually.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🎯</span>
+      <h3>Frequency Mask</h3>
+      <p>Selective frequency masking for targeted removal. Draw a mask over any spectrogram region to remove or isolate specific sounds. Perfect for removing clicks, hums, and narrowband interference.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="demo">
+<div class="container center">
+  <div class="section-label fade-in">Interactive</div>
+  <h2 class="section-title fade-in">See audio repair in action.</h2>
+  <p class="section-sub fade-in">Toggle between noisy and repaired to hear the difference. The spectrogram updates live.</p>
+</div>
+</section>
+
+<section class="section section-dark" id="specs">
+<div class="container center">
+  <div class="section-label fade-in">Specs</div>
+  <h2 class="section-title fade-in">Built for precision.</h2>
+  <div class="specs-grid fade-in">
+    <div class="spec-card"><div class="num">6</div><div class="desc">Spectral repair tools</div></div>
+    <div class="spec-card"><div class="num">12 dB</div><div class="desc">De-clip recovery</div></div>
+    <div class="spec-card"><div class="num">8192</div><div class="desc">Max FFT resolution</div></div>
+    <div class="spec-card"><div class="num">3</div><div class="desc">Plugin formats</div></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="pricing">
+<div class="container center">
+  <div class="section-label fade-in">Pricing</div>
+  <h2 class="section-title fade-in">Clean audio. Fair price.</h2>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-in">
+      <h3>Lite</h3>
+      <div class="price">$39</div>
+      <div class="price-sub">Single tool</div>
+      <ul>
+        <li>1 repair tool of choice</li>
+        <li>Spectrogram display</li>
+        <li>VST3 / AU</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/repair-lite" class="btn btn-secondary">Choose Tool</a>
+    </div>
+    <div class="pricing-card featured fade-in">
+      <h3>Pro</h3>
+      <div class="price">$79</div>
+      <div class="price-sub">All 6 tools</div>
+      <ul>
+        <li>All 6 spectral repair tools</li>
+        <li>Live spectrogram display</li>
+        <li>Before / after comparison</li>
+        <li>Frequency mask drawing</li>
+        <li>VST3 / AU / AAX</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/repair-pro" class="btn btn-primary">Buy Now</a>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Studio Bundle</h3>
+      <div class="price">$249</div>
+      <div class="price-sub">All NoDAW plugins</div>
+      <ul>
+        <li>Repair-IT Pro</li>
+        <li>NoDAW Racks Standard</li>
+        <li>Time Stretch X Pro</li>
+        <li>Chronos Weaver</li>
+        <li>All future updates</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/nodaw-bundle" class="btn btn-secondary">Get Bundle</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section cta-section" id="download">
+<div class="container center">
+  <div class="section-label fade-in">Try It</div>
+  <h2 class="section-title fade-in">Clean your next mix.</h2>
+  <p class="section-sub fade-in">Free 14-day trial. No credit card. Full repair suite, no limits.</p>
+  <div class="cta-actions fade-in">
+    <a href="#demo" class="btn btn-primary btn-lg">▶ Try Interactive Demo</a>
+    <a href="https://github.com/myaiplug/fantune-skin/releases" class="btn btn-secondary btn-lg">⬇ Download Free Trial</a>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <p>© 2026 NoDAW. Part of the <a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> ecosystem.</p>
+  <p><a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> · <a href="https://myaiplug.github.io/fantune-skin/nodaw-racks/">NoDAW Racks</a> · <a href="https://myaiplug.github.io/fantune-skin/time-stretch-x/">Time Stretch X</a> · <a href="https://myaiplug.github.io/fantune-skin/chronos-weaver/">Chronos Weaver</a></p>
+</div>
+</footer>
+
+<script>
+// ── SPECTROGRAM CANVAS ──────────────────────────────────────────
+const sc = document.getElementById('spec-canvas');
+const sctx = sc.getContext('2d');
+const sW=520, sH=280;
+let specMode = 'noisy';
+let specHistory = [];
+
+function generateSpectrogram(mode) {
+  const bins = 64;
+  const cols = 120;
+  const noiseFloor = mode==='noisy' ? 0.15 : 0.03;
+  const signalLevel = mode==='noisy' ? 0.6 : 0.85;
+
+  // sliding window
+  specHistory.push({bins, cols});
+  if(specHistory.length > cols) specHistory.shift();
+
+  const data = [];
+  for(let y=0; y<bins; y++) {
+    const row = [];
+    for(let x=0; x<cols; x++) {
+      const freq = y/bins;
+      const time = x/cols;
+      // harmonics
+      let v = 0;
+      for(let h=1; h<=5; h++) {
+        const harmonic = Math.sin(time*20*h)*0.15 + Math.sin(time*7*h)*0.1;
+        const peak = Math.exp(-((freq*h*2 - 0.5 + harmonic)**2)*20);
+        v += peak * signalLevel;
+      }
+      // noise floor
+      v += Math.random() * noiseFloor;
+      // hum
+      if(freq < 0.05) v += 0.3 * noiseFloor;
+      // sibilance
+      if(freq > 0.7 && freq < 0.85) v += 0.1 * (mode==='noisy' ? 0.8 : 0.05);
+      row.push(Math.min(1, v));
+    }
+    data.push(row);
+  }
+  return data;
+}
+
+function drawSpectrogram(mode) {
+  sctx.clearRect(0,0,sW,sH);
+  sctx.fillStyle='#0a0a14'; sctx.fillRect(0,0,sW,sH);
+
+  const data = generateSpectrogram(mode);
+  const rows = data.length;
+  const cols = data[0].length;
+  const cw = sW/cols, ch = sH/rows;
+
+  for(let y=0; y<rows; y++) {
+    for(let x=0; x<cols; x++) {
+      const v = 1 - data[y][x];
+      const r = Math.round(30 + (1-v)*60);
+      const g = Math.round(50 + (1-v)*180);
+      const b = Math.round(80 + (1-v)*100);
+      sctx.fillStyle = `rgb(${r},${g},${b})`;
+      sctx.fillRect(x*cw, y*ch, cw+1, ch+1);
+    }
+  }
+
+  // labels
+  sctx.fillStyle='rgba(255,255,255,0.15)'; sctx.font='8px system-ui';
+  sctx.textAlign='left';
+  sctx.fillText('20 kHz', 4, 12);
+  sctx.fillText('1 kHz', 4, sH/3);
+  sctx.fillText('50 Hz', 4, sH-6);
+  sctx.textAlign='right';
+  sctx.fillText(mode==='noisy' ? '⚠️ BEFORE (Noisy)' : '✅ AFTER (Repaired)', sW-8, 12);
+
+  // overlay
+  if(mode==='repaired') {
+    sctx.fillStyle='rgba(34,197,94,0.04)'; sctx.fillRect(0,0,sW,sH);
+  }
+}
+
+// toggle
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.toggle-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    specMode = btn.dataset.mode;
+    drawSpectrogram(specMode);
+  });
+});
+
+drawSpectrogram(specMode);
+setInterval(() => drawSpectrogram(specMode), 800);
+
+// scroll anim
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

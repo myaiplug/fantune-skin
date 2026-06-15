@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NoDAW Racks — 4-in-1 Analog Rack VST3 Plugin | Saturator, EQ, Spatial, Limiter</title>
+<meta name="description" content="NoDAW Racks: four analog processors in one VST3 plugin — Saturator, 7-Band EQ, Spatial Processor, Reactor Limiter. Interactive browser demo. Free trial."/>
+<meta name="keywords" content="analog rack VST, channel strip plugin, saturator VST, 7 band EQ, spatial processor, limiter plugin, rack mount VST"/>
+<meta name="robots" content="index, follow"/>
+<meta name="theme-color" content="#2563eb"/>
+<link rel="canonical" href="https://myaiplug.github.io/fantune-skin/nodaw-racks/"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='6' width='28' height='20' rx='3' fill='%232563eb'/><rect x='5' y='9' width='22' height='4' rx='1' fill='%230a0a0f'/><rect x='5' y='15' width='22' height='4' rx='1' fill='%230a0a0f'/><rect x='5' y='21' width='22' height='4' rx='1' fill='%230a0a0f'/></svg>"/>
+<meta property="og:title" content="NoDAW Racks — Analog Rack VST3 Plugin"/>
+<meta property="og:description" content="Four processors. One plugin. Saturator, 7-Band EQ, Spatial, Limiter."/>
+<meta property="og:url" content="https://myaiplug.github.io/fantune-skin/nodaw-racks/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"NoDAW Racks","applicationCategory":"Multimedia","operatingSystem":"Windows 10+, macOS 11+, Linux","description":"Four analog processors in one VST3 plugin — Saturator, 7-Band EQ, Spatial Processor, Reactor Limiter.","url":"https://myaiplug.github.io/fantune-skin/nodaw-racks/","softwareVersion":"1.0.0","offers":{"@type":"Offer","price":"99.00","priceCurrency":"USD","availability":"https://schema.org/InStock"}}</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:#08080e;color:#c8d0e0;overflow-x:hidden;line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-dark{background:#0a0a14}
+.section-label{font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#2563eb;margin-bottom:8px;font-weight:600}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:800;color:#e0f0ff;margin-bottom:16px;line-height:1.15}
+.section-sub{font-size:clamp(15px,1.5vw,18px);color:#7080a0;max-width:680px;line-height:1.7}
+.center{text-align:center}.center .section-sub{margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:10px;font-size:14px;font-weight:600;letter-spacing:0.05em;text-decoration:none;cursor:pointer;transition:all 0.25s;border:none;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;box-shadow:0 4px 30px rgba(37,99,235,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(37,99,235,0.45)}
+.btn-secondary{background:rgba(37,99,235,0.06);color:#2563eb;border:1px solid rgba(37,99,235,0.2)}
+.btn-secondary:hover{background:rgba(37,99,235,0.12);border-color:rgba(37,99,235,0.4)}
+.btn-lg{padding:18px 42px;font-size:16px}
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,14,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(37,99,235,0.06);height:64px;display:flex;align-items:center}
+header .container{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{display:flex;align-items:center;gap:10px;color:#e0f0ff;font-weight:700;font-size:16px;letter-spacing:0.04em;text-decoration:none}
+.logo span{color:rgba(37,99,235,0.7)}
+.nav{display:flex;align-items:center;gap:24px;list-style:none}
+.nav a{color:#7080a0;text-decoration:none;font-size:13px;font-weight:500;transition:color 0.2s}
+.nav a:hover{color:#2563eb}
+.nav .btn{padding:8px 18px;font-size:12px}
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg::before{content:'';position:absolute;top:-30%;left:-10%;width:120%;height:80%;background:radial-gradient(ellipse at 50% 50%, rgba(37,99,235,0.03) 0%, transparent 70%)}
+.hero .container{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;padding-top:40px}
+.hero h1{font-size:clamp(36px,5vw,60px);font-weight:900;line-height:1.08;color:#f0faff;margin-bottom:20px;letter-spacing:-0.02em}
+.hero h1 em{font-style:normal;color:#2563eb;display:block}
+.hero p{font-size:clamp(16px,1.5vw,19px);color:#7080a0;max-width:520px;margin-bottom:32px;line-height:1.7}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+@media(max-width:900px){.hero .container{grid-template-columns:1fr;gap:40px}.hero-right{order:-1}}
+
+#rack-canvas{width:100%;max-width:440px;aspect-ratio:360/480;display:block;margin:0 auto;border-radius:12px;background:#0a0a14;border:1px solid rgba(37,99,235,0.08)}
+.skin-selector{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.skin-dot{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s}
+.skin-dot:hover,.skin-dot.active{border-color:#2563eb;transform:scale(1.15)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:48px}
+.feature-card{padding:32px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(37,99,235,0.04);transition:all 0.3s}
+.feature-card:hover{border-color:rgba(37,99,235,0.12);transform:translateY(-3px)}
+.feature-card h3{font-size:16px;font-weight:700;color:#e0f0ff;margin-bottom:8px}
+.feature-card p{font-size:13px;color:#6070a0;line-height:1.7}
+.feature-card .icon{font-size:24px;margin-bottom:12px;display:block}
+.demo-frame-wrap{background:#06060c;border-radius:16px;border:1px solid rgba(37,99,235,0.06);overflow:hidden;box-shadow:0 0 80px rgba(0,0,0,0.5);margin:40px 0}
+.demo-frame-wrap iframe{width:100%;border:none;display:block;height:580px}
+@media(max-width:768px){.demo-frame-wrap iframe{height:440px}}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:48px}
+.spec-card{padding:24px;border-radius:10px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(37,99,235,0.04);text-align:center}
+.spec-card .num{font-size:28px;font-weight:800;color:#2563eb}
+.spec-card .desc{font-size:12px;color:#6070a0;margin-top:4px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px;align-items:start}
+.pricing-card{padding:36px 28px;border-radius:14px;background:linear-gradient(145deg,#0e0e20,#0a0a18);border:1px solid rgba(37,99,235,0.04);text-align:center;transition:all 0.3s;position:relative}
+.pricing-card.featured{border-color:#2563eb;box-shadow:0 0 40px rgba(37,99,235,0.08)}
+.pricing-card.featured::before{content:'Most Popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;font-size:10px;font-weight:700;padding:4px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:0.08em}
+.pricing-card:hover{border-color:rgba(37,99,235,0.2);transform:translateY(-4px)}
+.pricing-card h3{font-size:18px;font-weight:700;color:#e0f0ff}
+.pricing-card .price{font-size:36px;font-weight:900;color:#fff;margin:12px 0 4px}
+.pricing-card .price-sub{font-size:13px;color:#6070a0;margin-bottom:16px}
+.pricing-card ul{list-style:none;text-align:left;margin:16px 0;font-size:13px;color:#8090b0}
+.pricing-card ul li{padding:7px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.pricing-card ul li::before{content:'✓';color:#2563eb;font-weight:700}
+.pricing-card .btn{width:100%;justify-content:center}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr;max-width:400px;margin:48px auto 0}}
+.cta-section{text-align:center;background:linear-gradient(180deg,transparent,rgba(37,99,235,0.02),transparent);border-top:1px solid rgba(37,99,235,0.04);border-bottom:1px solid rgba(37,99,235,0.04)}
+.cta-section h2{font-size:clamp(30px,4vw,44px)}
+.cta-section .section-sub{margin:16px auto 36px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+footer{background:#06060c;border-top:1px solid rgba(37,99,235,0.04);padding:40px 0}
+footer .container{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+footer p{font-size:12px;color:#405070}
+footer a{color:#2563eb;text-decoration:none;font-size:12px}
+footer a:hover{text-decoration:underline}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="container">
+  <a href="#" class="logo">NoDAW <span>Racks</span></a>
+  <ul class="nav">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#specs">Specs</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="https://fantune.lemonsqueezy.com/checkout/buy/rack-pro" class="btn btn-primary">Buy $99</a></li>
+  </ul>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="container">
+  <div>
+    <div class="section-label" style="margin-bottom:16px">🔥 4-in-1 Analog Rack VST3</div>
+    <h1>The analog rack.<br/><em>Reimagined.</em></h1>
+    <p>Four meticulously crafted analog processors — Saturator, 7-Band EQ, Spatial Processor, Reactor Limiter — in one drag-and-drop rack-mount VST3 plugin. No emulation. No compromise.</p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-primary btn-lg">▶ Try Interactive Demo</a>
+      <a href="#pricing" class="btn btn-secondary btn-lg">Buy $99</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <canvas id="rack-canvas" width="360" height="480"></canvas>
+    <div class="skin-selector">
+      <span class="skin-dot" data-skin="obsidian" style="background:#1a1a1a"></span>
+      <span class="skin-dot" data-skin="silver" style="background:#c0c0c0"></span>
+      <span class="skin-dot active" data-skin="cobalt" style="background:#1e3a5f"></span>
+      <span class="skin-dot" data-skin="plastic" style="background:#2a2a2a"></span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="demo">
+<div class="container center">
+  <div class="section-label fade-in">Interactive</div>
+  <h2 class="section-title fade-in">Try NoDAW Racks in your browser.</h2>
+  <p class="section-sub fade-in">Click any module to toggle. Drag knobs. Hear the chain in real time.</p>
+  <div class="demo-frame-wrap fade-in">
+    <iframe src="demo.html" title="NoDAW Racks interactive demo" sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+</div>
+</section>
+
+<section class="section" id="features">
+<div class="container center">
+  <div class="section-label fade-in">The Rack</div>
+  <h2 class="section-title fade-in">Four processors. One plugin.</h2>
+  <p class="section-sub fade-in">Drag-and-drop chain in a single VST3. Every module is a studio-grade processor.</p>
+  <div class="features-grid">
+    <div class="feature-card fade-in">
+      <span class="icon">🌀</span>
+      <h3>Saturator</h3>
+      <p>Analog-modeled tape and tube saturation with drive, mix, and auto-gain. From subtle warmth to crushed harmonics. Three saturation curves: Tape, Tube, Diode.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">📊</span>
+      <h3>7-Band Precision EQ</h3>
+      <p>Low/high shelves + 5 peaking bands with variable Q. Real-time frequency response display. Surgical precision meets musical curves. 20 Hz–20 kHz range.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🌊</span>
+      <h3>Spatial Processor</h3>
+      <p>Stereo width, Haas delay, mid-side matrix, and spatial pan. Widen, narrow, or invert stereo field. Mono-compatible width control with correlation meter.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">⚡</span>
+      <h3>Reactor Limiter</h3>
+      <p>Lookahead brickwall limiter with adaptive release, K-metering, and oversampling (2x/4x/8x). Transparent leveling or aggressive RMS density.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">🎨</span>
+      <h3>4 Hardware Skins</h3>
+      <p>Obsidian leather, brushed silver, cobalt powder coat, or matte black plastic. Every skin changes the entire rack aesthetic — including knob finishes and VU colors.</p>
+    </div>
+    <div class="feature-card fade-in">
+      <span class="icon">💾</span>
+      <h3>Full Preset System</h3>
+      <p>50 factory presets by world-class engineers plus unlimited user save/load. Per-module bypass, A/B comparison, and chain drag-and-drop reorder.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section section-dark" id="specs">
+<div class="container center">
+  <div class="section-label fade-in">Specs</div>
+  <h2 class="section-title fade-in">Built for the studio.</h2>
+  <div class="specs-grid fade-in">
+    <div class="spec-card"><div class="num">192 kHz</div><div class="desc">Sample rate support</div></div>
+    <div class="spec-card"><div class="num">0.5 ms</div><div class="desc">Latency per module</div></div>
+    <div class="spec-card"><div class="num">4</div><div class="desc">Processor modules</div></div>
+    <div class="spec-card"><div class="num">3</div><div class="desc">Plugin formats</div></div>
+  </div>
+</div>
+</section>
+
+<section class="section" id="pricing">
+<div class="container center">
+  <div class="section-label fade-in">Pricing</div>
+  <h2 class="section-title fade-in">Choose your rack.</h2>
+  <div class="pricing-grid">
+    <div class="pricing-card fade-in">
+      <h3>Lite</h3>
+      <div class="price">$49</div>
+      <div class="price-sub">One module of your choice</div>
+      <ul>
+        <li>1 processor module</li>
+        <li>Real-time metering</li>
+        <li>All 4 hardware skins</li>
+        <li>VST3 / AU / AAX</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/rack-lite" class="btn btn-secondary">Select Module</a>
+    </div>
+    <div class="pricing-card featured fade-in">
+      <h3>Standard</h3>
+      <div class="price">$99</div>
+      <div class="price-sub">Full rack, all modules</div>
+      <ul>
+        <li>All 4 processor modules</li>
+        <li>Full chain drag-and-drop</li>
+        <li>All 4 hardware skins</li>
+        <li>50 factory + user presets</li>
+        <li>VST3 / AU / AAX</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/rack-pro" class="btn btn-primary">Buy Now</a>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Studio Bundle</h3>
+      <div class="price">$249</div>
+      <div class="price-sub">All NoDAW plugins</div>
+      <ul>
+        <li>NoDAW Racks Standard</li>
+        <li>Time Stretch X Pro</li>
+        <li>Repair-IT Pro</li>
+        <li>Chronos Weaver</li>
+        <li>All future updates</li>
+      </ul>
+      <a href="https://fantune.lemonsqueezy.com/checkout/buy/nodaw-bundle" class="btn btn-secondary">Get Bundle</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="section cta-section" id="download">
+<div class="container center">
+  <div class="section-label fade-in">Try It</div>
+  <h2 class="section-title fade-in">Start your analog workflow.</h2>
+  <p class="section-sub fade-in">Free 14-day trial. No credit card. Full rack, no limitations.</p>
+  <div class="cta-actions fade-in">
+    <a href="#demo" class="btn btn-primary btn-lg">▶ Try Browser Demo</a>
+    <a href="https://github.com/myaiplug/fantune-skin/releases" class="btn btn-secondary btn-lg">⬇ Download Free Trial</a>
+  </div>
+</div>
+</section>
+
+<footer>
+<div class="container">
+  <p>© 2026 NoDAW. Part of the <a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> ecosystem.</p>
+  <p><a href="https://myaiplug.github.io/fantune-skin/">FanTune</a> · <a href="https://myaiplug.github.io/fantune-skin/time-stretch-x/">Time Stretch X</a> · <a href="https://myaiplug.github.io/fantune-skin/repair-it/">Repair-IT</a> · <a href="https://myaiplug.github.io/fantune-skin/chronos-weaver/">Chronos Weaver</a></p>
+</div>
+</footer>
+
+<script>
+// ── RACK CANVAS RENDER ──────────────────────────────────────────
+const rackCanvas = document.getElementById('rack-canvas');
+const rctx = rackCanvas.getContext('2d');
+const rW=360, rH=480;
+let rackSkin = 'cobalt';
+const moduleNames = ['SATURATOR', '7-BAND EQ', 'SPATIAL', 'REACTOR LIMITER'];
+const moduleColors = ['#2563eb', '#06b6d4', '#a855f7', '#22c55e'];
+let bypassState = [false, false, false, false];
+let vuLevels = [0.55, 0.70, 0.35, 0.90];
+
+function getSkinColors(skin) {
+  switch(skin) {
+    case 'obsidian': return {bg:'#1a1a1a',bg2:'#111',accent:'#444',text:'#aaa',knob:'#333',vu:'#22c55e'};
+    case 'silver': return {bg:'#c0c0c0',bg2:'#a8a8a8',accent:'#888',text:'#222',knob:'#999',vu:'#2563eb'};
+    case 'plastic': return {bg:'#2a2a2a',bg2:'#1e1e1e',accent:'#555',text:'#999',knob:'#3a3a3a',vu:'#eab308'};
+    default: return {bg:'#1e3a5f',bg2:'#142842',accent:'#3b6f9e',text:'#8ab4d6',knob:'#2a5070',vu:'#22c55e'};
+  }
+}
+
+function drawRack() {
+  const c = getSkinColors(rackSkin);
+  rctx.clearRect(0,0,rW,rH);
+
+  // chassis
+  const grad = rctx.createLinearGradient(0,0,0,rH);
+  grad.addColorStop(0,c.bg); grad.addColorStop(1,c.bg2);
+  rctx.fillStyle=grad; rctx.beginPath();
+  rctx.roundRect(10,10,rW-20,rH-20,8); rctx.fill();
+  rctx.strokeStyle=c.accent; rctx.lineWidth=1;
+  rctx.beginPath(); rctx.roundRect(10,10,rW-20,rH-20,8); rctx.stroke();
+
+  // rack ears
+  rctx.fillStyle=c.bg2; rctx.fillRect(0,40,10,80); rctx.fillRect(rW-10,40,10,80);
+  rctx.fillRect(0,rH-120,10,80); rctx.fillRect(rW-10,rH-120,10,80);
+
+  // brand
+  rctx.fillStyle=c.text; rctx.font='bold 10px system-ui'; rctx.textAlign='center';
+  rctx.fillText('NoDAW RACKS', rW/2, 28);
+  rctx.fillStyle=c.accent; rctx.font='7px system-ui';
+  rctx.fillText('ANALOG PROCESSOR CHAIN', rW/2, 40);
+
+  // modules
+  const modH = 70, modGap = 8, startY = 52;
+  for(let i=0; i<4; i++) {
+    const y = startY + i*(modH+modGap);
+    const active = !bypassState[i];
+    rctx.fillStyle = active ? `rgba(255,255,255,0.04)` : `rgba(0,0,0,0.3)`;
+    rctx.beginPath(); rctx.roundRect(24,y,rW-48,modH,4); rctx.fill();
+    rctx.strokeStyle = active ? moduleColors[i] : c.accent;
+    rctx.lineWidth = active ? 2 : 0.5;
+    rctx.beginPath(); rctx.roundRect(24,y,rW-48,modH,4); rctx.stroke();
+
+    // bypass LED
+    rctx.beginPath(); rctx.arc(36, y+modH/2, 4, 0, Math.PI*2);
+    rctx.fillStyle = active ? `rgba(34,197,94,0.8)` : `rgba(100,100,100,0.3)`;
+    rctx.fill();
+    if(active) {
+      rctx.shadowColor = '#22c55e'; rctx.shadowBlur = 8;
+      rctx.beginPath(); rctx.arc(36, y+modH/2, 4, 0, Math.PI*2); rctx.fill();
+      rctx.shadowBlur=0;
+    }
+
+    // module name
+    rctx.fillStyle = active ? '#e0f0ff' : c.text;
+    rctx.font='bold 8px system-ui'; rctx.textAlign='left';
+    rctx.fillText(moduleNames[i], 46, y+24);
+
+    // VU meter
+    const vuW = 80, vuH = 8, vuX = rW-120, vuY = y+20;
+    rctx.fillStyle='rgba(0,0,0,0.4)'; rctx.beginPath(); rctx.roundRect(vuX,vuY,vuW,vuH,2); rctx.fill();
+    const v = active ? vuLevels[i] : 0.02;
+    rctx.fillStyle = v > 0.8 ? '#ef4444' : v > 0.6 ? '#eab308' : c.vu;
+    rctx.beginPath(); rctx.roundRect(vuX+1,vuY+1,(vuW-2)*v,vuH-2,1.5); rctx.fill();
+
+    // knob
+    const kx = rW-170, ky=y+modH/2;
+    rctx.beginPath(); rctx.arc(kx,ky,10,0,Math.PI*2);
+    rctx.fillStyle=c.knob; rctx.fill();
+    rctx.strokeStyle=active ? moduleColors[i] : c.accent; rctx.lineWidth=1; rctx.stroke();
+    if(active) {
+      const val = (i+1)*0.2;
+      const sa=Math.PI*0.75, ea=Math.PI*2.25, va=sa+val*(ea-sa);
+      rctx.beginPath(); rctx.arc(kx,ky,8,sa,va);
+      rctx.strokeStyle=moduleColors[i]; rctx.lineWidth=2; rctx.stroke();
+    }
+  }
+
+  // output section
+  const outY = startY + 4*(modH+modGap) + 12;
+  rctx.fillStyle=c.text; rctx.font='bold 7px system-ui'; rctx.textAlign='center';
+  rctx.fillText('OUTPUT', rW/2, outY+8);
+  // master VU
+  rctx.fillStyle='rgba(0,0,0,0.4)'; rctx.beginPath(); rctx.roundRect(rW/2-40,outY+12,80,6,2); rctx.fill();
+  const mv = Math.max(...vuLevels);
+  rctx.fillStyle = mv > 0.8 ? '#ef4444' : mv > 0.6 ? '#eab308' : c.vu;
+  rctx.beginPath(); rctx.roundRect(rW/2-39,outY+13,78*mv,4,1.5); rctx.fill();
+}
+
+drawRack();
+
+// skin selector
+document.querySelectorAll('.skin-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    document.querySelectorAll('.skin-dot').forEach(d=>d.classList.remove('active'));
+    dot.classList.add('active');
+    rackSkin = dot.dataset.skin;
+    drawRack();
+  });
+});
+
+// animate VU
+function animateVU() {
+  vuLevels = vuLevels.map(v => Math.max(0.02, v*0.92 + Math.random()*0.15*0.08));
+  drawRack();
+  setTimeout(animateVU, 200);
+}
+animateVU();
+
+// toggle module on click
+rackCanvas.addEventListener('click', (e) => {
+  const rect = rackCanvas.getBoundingClientRect();
+  const y = (e.clientY - rect.top)/rect.height * rH;
+  const modH=70, modGap=8, startY=52;
+  for(let i=0; i<4; i++) {
+    const my = startY + i*(modH+modGap);
+    if(y >= my && y < my+modH) { bypassState[i] = !bypassState[i]; drawRack(); break; }
+  }
+});
+
+// scroll animations
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
